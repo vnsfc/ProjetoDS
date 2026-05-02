@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  email     String   @unique
+  senha     String
+  perfil    String   // ESTUDANTE, PROFESSOR, NAPA, ADMIN
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  prontuariosComoEstudante  Prontuario[] @relation("EstudanteProntuario")
+  prontuariosComoSupervisor Prontuario[] @relation("ProfessorProntuario")
+}
+
+model Prontuario {
+  id           Int      @id @default(autoincrement())
+  pacienteNome String
+  anamnese     String?
+  procedimentos String?
+  assinado     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  estudante   Usuario  @relation("EstudanteProntuario", fields: [estudanteId], references: [id])
+  estudanteId Int
+
+  professor   Usuario? @relation("ProfessorProntuario", fields: [professorId], references: [id])
+  professorId Int?
+}
+
+model FilaEspera {
+  id           Int      @id @default(autoincrement())
+  pacienteNome String
+  prioridade   String   // URGENTE, NORMAL, ELETIVO
+  createdAt    DateTime @default(now())
+}
+
+model Agenda {
+  id        Int      @id @default(autoincrement())
+  data      DateTime
+  status    String   // DISPONIVEL, AGENDADO, CANCELADO
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Oferta {
+  id        Int      @id @default(autoincrement())
+  data      DateTime
+  vagas     Int
+  createdAt DateTime @default(now())
+}
