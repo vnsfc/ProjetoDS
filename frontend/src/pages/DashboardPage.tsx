@@ -5,11 +5,13 @@ import { useAuth } from '@/hooks/useAuth';
 import { perfilLabel } from '@/utils';
 import { type UserPerfil } from '@/types';
 
+
 interface Atalho {
   to: string;
   label: string;
   descricao: string;
 }
+
 
 const atalhosPorPerfil: Record<UserPerfil, Atalho[]> = {
   ESTUDANTE: [
@@ -77,14 +79,18 @@ const atalhosPorPerfil: Record<UserPerfil, Atalho[]> = {
   ],
 };
 
+
 export const DashboardPage: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+
   if (!user) return null;
+
 
   const primeiroNome = user.nome.split(' ')[0];
   const atalhos = atalhosPorPerfil[user.perfil] ?? [];
+
 
   return (
     <div>
@@ -95,6 +101,7 @@ export const DashboardPage: React.FC = () => {
         Você está logado como{' '}
         <strong className="text-blue-600">{perfilLabel(user.perfil)}</strong>.
       </p>
+
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {atalhos.map((atalho) => (
