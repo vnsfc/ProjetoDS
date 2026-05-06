@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/AuthStores';
 import axiosInstance from '../api/axiosInstance';
 
@@ -16,11 +16,14 @@ export const LoginForm: React.FC = () => {
 
     try {
       const response = await axiosInstance.post('/auth/login', { email, senha });
-      const { user, token } = response.data;
-      login(user, token);
+      // O backend atual devolve "usuario"; este fallback evita erro se mudar para "user".
+      const { usuario, user, token } = response.data;
+      login(user ?? usuario, token);
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.message || 'Erro ao fazer login.');
+      // Mostra a mensagem enviada pelo backend quando existir.
+      const mensagemBackend = err.response?.data?.erro;
+      setError(mensagemBackend || 'Não foi possível fazer login. Confira se o backend está rodando.');
     }
   };
 
@@ -39,6 +42,12 @@ export const LoginForm: React.FC = () => {
       <button type="submit" className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md transition-colors">
         Entrar
       </button>
+      <p className="text-center text-sm text-gray-500">
+        Ainda não tem conta?{' '}
+        <Link to="/register" className="font-medium text-blue-600 hover:text-blue-700">
+          Criar cadastro
+        </Link>
+      </p>
     </form>
   );
 };

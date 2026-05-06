@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
 import { UserPerfil } from '../stores/AuthStores';
 
@@ -22,7 +22,9 @@ export const RegisterForm: React.FC = () => {
       setSuccess('Cadastro realizado com sucesso! Redirecionando para login...');
       setTimeout(() => navigate('/login'), 1500);
     } catch (err: any) {
-      setError(err.message || 'Erro ao realizar cadastro.');
+      // Mostra a mensagem enviada pelo backend quando existir.
+      const mensagemBackend = err.response?.data?.erro;
+      setError(mensagemBackend || 'Não foi possível criar a conta. Confira se o backend está rodando.');
     }
   };
 
@@ -55,6 +57,12 @@ export const RegisterForm: React.FC = () => {
       <button type="submit" className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md transition-colors">
         Criar Conta
       </button>
+      <p className="text-center text-sm text-gray-500">
+        Já tem conta?{' '}
+        <Link to="/login" className="font-medium text-blue-600 hover:text-blue-700">
+          Entrar
+        </Link>
+      </p>
     </form>
   );
 };
