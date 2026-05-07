@@ -2,7 +2,8 @@ import axios from 'axios';
 import { useAuthStore } from '../stores/AuthStores';
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
+  // Vazio usa o proxy do Vite; VITE_API_URL permite apontar para outro backend.
+  baseURL: import.meta.env.VITE_API_URL || '',
   headers: {
     'Content-Type': 'application/json',
   },

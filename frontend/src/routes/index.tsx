@@ -7,13 +7,15 @@ import { AgendaPage } from '@/pages/AgendaPage';
 import { AppLayout } from '@/components/layout'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
+import { NovoProntuarioPage } from '@/pages/NovoProntuarioPage'
+import { ProntuarioDetailPage } from '@/pages/ProntuarioDetailPage'
+import { ProntuariosPage } from '@/pages/ProntuariosPage'
 
 // ── Pessoa 1 ──────────────────────────────────────────────────────────
 import { LoginForm } from '@/components/LoginForm'
 import { RegisterForm } from '@/components/RegisterForm'
 
 // ── Outras pessoas (descomentar quando prontos) ────────────────────────
-// import { ProntuariosPage } from '@/pages/ProntuariosPage'   // Pessoa 3
 // import { TriagemPage }     from '@/pages/TriagemPage'        // Pessoa 4
 // import { AgendaPage }      from '@/pages/AgendaPage'         // Pessoa 5
 // import { UsuariosPage }    from '@/pages/UsuariosPage'       // Pessoa 5
@@ -33,14 +35,18 @@ export function AppRoutes() {
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/perfil"    element={<div className="p-8">Perfil</div>} />
+
+            <Route path="/prontuarios" element={<ProntuariosPage />} />
+            <Route path="/prontuarios/:id" element={<ProntuarioDetailPage />} />
+            <Route element={<PrivateRoute allowedProfiles={['ESTUDANTE']} />}>
+              <Route path="/prontuarios/novo" element={<NovoProntuarioPage />} />
+            </Route>
+
             <Route path="/triagem"   element={<TriagemPage />} />
             <Route path="/agenda" element={<AgendaPage />} />
-            {/* Descomentar à medida que as outras pessoas entregam */}
-            {/* <Route path="/prontuarios" element={<ProntuariosPage />} /> */}
-            {/* <Route path="/usuarios"    element={<UsuariosPage />} /> */}
+
           </Route>
         </Route>
-        {/* 404 */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
