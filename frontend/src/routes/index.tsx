@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { PrivateRoute } from './privateRoute'
-
+// ── Pessoa 4 ──────────────────────────────────────────────────────────
+import { TriagemPage } from '@/pages/TriagemPage';
+import { AgendaPage } from '@/pages/AgendaPage';
 // ── Pessoa 2 ──────────────────────────────────────────────────────────
 import { AppLayout } from '@/components/layout'
 import { DashboardPage } from '@/pages/DashboardPage'
@@ -27,6 +29,7 @@ export function AppRoutes() {
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/"         element={<Navigate to="/dashboard" replace />} />
 
+
         {/* Rotas privadas — todas dentro do AppLayout (Sidebar + Navbar) */}
         <Route element={<PrivateRoute />}>
           <Route element={<AppLayout />}>
@@ -39,16 +42,14 @@ export function AppRoutes() {
               <Route path="/prontuarios/novo" element={<NovoProntuarioPage />} />
             </Route>
 
-            {/* Descomentar à medida que as outras pessoas entregam */}
-            {/* <Route path="/triagem"     element={<TriagemPage />} /> */}
-            {/* <Route path="/agenda"      element={<AgendaPage />} /> */}
-            {/* <Route path="/usuarios"    element={<UsuariosPage />} /> */}
+            <Route path="/triagem"   element={<TriagemPage />} />
+            <Route path="/agenda" element={<AgendaPage />} />
+
           </Route>
         </Route>
-
-        {/* 404 */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   )
 }
+

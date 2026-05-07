@@ -3,11 +3,13 @@ import { NavLink } from 'react-router-dom';
 import { useAuthStore, type UserPerfil } from '@/stores/AuthStores';
 import { cn } from '@/utils';
 
+
 interface NavItem {
   to: string;
   label: string;
   allowedPerfis: UserPerfil[];
 }
+
 
 const navItems: NavItem[] = [
   {
@@ -42,12 +44,15 @@ const navItems: NavItem[] = [
   },
 ];
 
+
 export const Sidebar: React.FC = () => {
   const { user } = useAuthStore();
+
 
   const itemsVisiveis = navItems.filter(
     (item) => user && item.allowedPerfis.includes(user.perfil),
   );
+
 
   return (
     <aside className="w-56 bg-white border-r border-gray-200 flex flex-col flex-shrink-0">
@@ -56,6 +61,7 @@ export const Sidebar: React.FC = () => {
           Menu
         </span>
       </div>
+
 
       <nav className="flex-1 p-3 flex flex-col gap-1">
         {itemsVisiveis.map((item) => (
