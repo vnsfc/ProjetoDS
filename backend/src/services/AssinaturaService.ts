@@ -1,7 +1,8 @@
 import { ProntuarioRepository } from '../repositories/ProntuarioRepository'
+import { Perfil } from '../types/types'
 
 export const AssinaturaService = {
-  assinar: async (prontuarioId: number, professorId: number, perfilSolicitante: string) => {
+  assinar: async (prontuarioId: number, professorId: number, perfilSolicitante: Perfil) => {
     if (perfilSolicitante !== 'PROFESSOR') {
       throw new Error('Apenas professores podem assinar prontuários')
     }

@@ -10,9 +10,10 @@ export const AuthService = {
   },
   login: async (email: string, senha: string) => {
     const usuario = await UsuarioRepository.buscarPorEmail(email)
-    if (!usuario) throw new Error('Usuário não encontrado')
+    if (!usuario) throw new Error('Usuário e/ou senha incorretos')
+
     const senhaCorreta = await bcrypt.compare(senha, usuario.senha)
-    if (!senhaCorreta or !usuario) throw new Error('sa')
+    if (!senhaCorreta) throw new Error('Usuário e/ou senha incorretos')
 
     const token = jwt.sign({ id: usuario.id, perfil: usuario.perfil }, JWT_SECRET, { expiresIn: '8h' })
     return { token, usuario: { id: usuario.id, nome: usuario.nome, perfil: usuario.perfil } }
