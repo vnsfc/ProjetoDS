@@ -83,7 +83,7 @@ describe('AuthService', () => {
     vi.mocked(UsuarioRepository.buscarPorEmail).mockResolvedValue(null)
 
     await expect(AuthService.login('naoexiste@email.com', '123456'))
-      .rejects.toThrow('Usuário não encontrado')
+      .rejects.toThrow('Usuário e/ou senha incorretos')
   })
 
   it('Teste 4 - login: deve lançar erro se senha estiver incorreta', async () => {
@@ -92,7 +92,7 @@ describe('AuthService', () => {
     vi.mocked(bcrypt.compare).mockResolvedValue(false as never)
 
     await expect(AuthService.login('davis@email.com', 'senhaerrada'))
-      .rejects.toThrow('Senha incorreta')
+      .rejects.toThrow('Usuário e/ou senha incorretos')
   })
 
 })
