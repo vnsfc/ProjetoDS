@@ -49,6 +49,7 @@ import { FilaEsperaRepository } from '../repositories/FilaEsperaRepository'
 import { AuthService } from '../services/AuthService'
 import { UsuarioService } from '../services/UsuarioService'
 import { ProntuarioService } from '../services/ProntuarioService'
+import { AssinaturaService } from '../services/AssinaturaService'
 import { FilaEsperaService } from '../services/FilaEsperaService'
 import bcrypt from 'bcrypt'
 
@@ -135,6 +136,18 @@ describe('UsuarioService', () => {
     expect(resultado.perfil).toBe('PROFESSOR')
   })
 
+  it('Teste 12 - cadastrar (Edge Case): deve lançar erro se o e-mail já estiver em uso', async () => {
+    const usuarioExistente = { id: 99, nome: 'Antigo', email: 'duplicado@email.com', perfil: 'ESTUDANTE' }
+    vi.mocked(UsuarioRepository.buscarPorEmail).mockResolvedValue(usuarioExistente as any)
+
+    //Tenta cadastrar e espera que a função seja rejeitada
+    await expect(
+      UsuarioService.cadastrar(
+        { nome: 'Novo Aluno', email: 'duplicado@email.com', senha: '123', perfil: 'ESTUDANTE' },
+        'ADMIN' 
+      )
+    ).rejects.toThrow() 
+  })
 })
 
 describe('ProntuarioService', () => {
@@ -167,7 +180,30 @@ describe('ProntuarioService', () => {
     expect(resultado[0].pacienteNome).toBe('João')
   })
 
+  it('Teste 11 - assinar: deve permitir que um professor assine e valide o prontuário', async () => {
+    const prontuarioMock = { id: 1, pacienteNome: 'Carlos', assinado: false, estudanteId: 1 }
+    const prontuarioAtualizado = { ...prontuarioMock, assinado: true, professorId: 2 }
+
+    vi.mocked(ProntuarioRepository.buscarPorId).mockResolvedValue(prontuarioMock as any)
+    vi.mocked(ProntuarioRepository.atualizar).mockResolvedValue(prontuarioAtualizado as any)
+    // Passando o ID do usuário, do professor e o perfil
+    const resultado = await AssinaturaService.assinar(1, 2, 'PROFESSOR')
+
+    expect(resultado.assinado).toBe(true)
+    expect(resultado.professorId).toBe(2)
+  })
 })
+
+  it('Teste 13 - listarPorAluno: deve retornar array vazio se o estudante não tiver prontuários', async () => {
+    // Simula o banco de dados retornando vazio
+    vi.mocked(ProntuarioRepository.listarPorAluno).mockResolvedValue([])
+
+    const resultado = await ProntuarioService.listarPorAluno(999)
+
+    // Garante que o retorno é uma lista vazia
+    expect(resultado).toBeInstanceOf(Array)
+    expect(resultado).toHaveLength(0)
+  })
 
 describe('FilaEsperaService', () => {
 
