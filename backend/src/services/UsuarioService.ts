@@ -29,7 +29,10 @@ export const UsuarioService = {
     const usuario = await UsuarioRepository.buscarPorId(id)
     if (!usuario) throw new Error('Usuário não encontrado')
     return usuario
-  }
+  },
+  listarTodos: async () => {
+  return UsuarioRepository.listarTodos()
+}
 }
 
 //Valida se os campos obrigatórios do perfil foram enviados

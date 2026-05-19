@@ -5,7 +5,9 @@ export const UsuarioRepository = {
   buscarPorEmail: async (email: string) => {
     return prisma.usuario.findUnique({ where: { email } })
   },
-
+  listarTodos: async () => {
+  return prisma.usuario.findMany()
+  },
   buscarPorCpf: async (cpf: string) => {
     return prisma.usuario.findUnique({ where: { cpf } })
   },

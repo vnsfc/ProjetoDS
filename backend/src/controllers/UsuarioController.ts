@@ -17,7 +17,14 @@ export const UsuarioController = {
       res.status(400).json({ erro: error.message })
     }
   },
- 
+  listarTodos: async (req: Request, res: Response): Promise<void> => {
+  try {
+    const usuarios = await UsuarioService.listarTodos()
+    res.json(usuarios)
+  } catch (error: any) {
+    res.status(400).json({ erro: error.message })
+    }
+  },
   me: async (req: Request, res: Response): Promise<void> => {
     try {
       const id = (req as any).usuario?.id
