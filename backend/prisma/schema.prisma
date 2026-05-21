@@ -9,29 +9,57 @@ datasource db {
 
 model Usuario {
   id        Int      @id @default(autoincrement())
-  nome      String
-  email     String   @unique
-  senha     String
-  perfil    String   // ESTUDANTE, PROFESSOR, NAPA, ADMIN
+  perfil    String   // ESTUDANTE | PROFESSOR | NAPA | ADMIN
+  //dados comuns
+  nome            String
+  email           String    @unique
+  senha           String
+  nacionalidade   String?
+  cpf             String?   @unique
+  telefone        String?
+  dataNascimento  DateTime?
+  clinicaAtuacao  String?
+  diasLivres      String?   // JSON ex: '{"SEGUNDA":["MANHA","TARDE"]}'
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  //campos de ESTUDANTE
+  tipoEstagio       String?   // CURRICULAR | EXTRACURRICULAR
+  nomeSupervisor    String?
+  nomeCurso         String?
+  periodoAtual      Int?
+  previsaoConclusao DateTime?
+
+  //campos de PROFESSOR
+  conselhoProfissional  String?
+  numeroRegistro        String?   @unique
+  estadoRegistro        String?
+  dataValidade          DateTime?
+  //relações
   prontuariosComoEstudante  Prontuario[] @relation("EstudanteProntuario")
   prontuariosComoSupervisor Prontuario[] @relation("ProfessorProntuario")
 }
 
 model Prontuario {
-  id           Int      @id @default(autoincrement())
-  pacienteNome String
-  anamnese     String?
-  procedimentos String?
-  assinado     Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  status      String   @default("EM_ANDAMENTO") // EM_ANDAMENTO | ASSINADO | ARQUIVADO
 
+  pacienteNome        String
+  evolucaoClinica     String    // obrigatório
+  procedimentos       String?   // texto livre ou JSON com códigos
+  examesSolicitados   String?   // JSON ex: '["Raio-X","Hemograma"]'
+  prescricoes         String?   // JSON ex: '[{"med":"Ibuprofeno","dose":"400mg"}]'
+  dataAtendimento     DateTime  @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // FK do estudante (criador — obrigatório)
   estudante   Usuario  @relation("EstudanteProntuario", fields: [estudanteId], references: [id])
   estudanteId Int
 
+  // FK do professor (opcional — obrigatória só no momento da assinatura)
   professor   Usuario? @relation("ProfessorProntuario", fields: [professorId], references: [id])
   professorId Int?
 }
@@ -39,14 +67,14 @@ model Prontuario {
 model FilaEspera {
   id           Int      @id @default(autoincrement())
   pacienteNome String
-  prioridade   String   // URGENTE, NORMAL, ELETIVO
+  prioridade   String   // URGENTE | NORMAL | ELETIVO
   createdAt    DateTime @default(now())
 }
 
 model Agenda {
   id        Int      @id @default(autoincrement())
   data      DateTime
-  status    String   // DISPONIVEL, AGENDADO, CANCELADO
+  status    String   // DISPONIVEL | AGENDADO | CANCELADO
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
