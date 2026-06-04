@@ -4,38 +4,44 @@ import { DadosCadastro, Perfil } from '../types/types'
 
 export const UsuarioService = {
   cadastrar: async (dados: DadosCadastro, perfilSolicitante: Perfil) => {
-    //PROFESSOR só pode ser cadastrado por ADMIN
+    // PROFESSOR só pode ser cadastrado por ADMIN
     if (dados.perfil === 'PROFESSOR' && perfilSolicitante !== 'ADMIN') {
       throw new Error('Apenas administradores podem cadastrar professores')
     }
-    //ADMIN e NAPA só podem ser cadastrados por ADMIN
+    // ADMIN e NAPA só podem ser cadastrados por ADMIN
     if ((dados.perfil === 'ADMIN' || dados.perfil === 'NAPA') && perfilSolicitante !== 'ADMIN') {
       throw new Error('Apenas administradores podem cadastrar este perfil')
     }
-    //email duplicado
+    // Email duplicado
     const emailExistente = await UsuarioRepository.buscarPorEmail(dados.email)
     if (emailExistente) throw new Error('Email já cadastrado')
-    //CPF duplicado (se informado)
+    // CPF duplicado (se informado)
     if (dados.cpf) {
       const cpfExistente = await UsuarioRepository.buscarPorCpf(dados.cpf)
       if (cpfExistente) throw new Error('CPF já cadastrado')
     }
-    //Valida campos obrigatórios por perfil
+    // Valida campos obrigatórios por perfil
     validarCamposPorPerfil(dados)
     const senhaHash = await AuthService.hashSenha(dados.senha)
     return UsuarioRepository.salvar({ ...dados, senha: senhaHash })
   },
-  buscarPorId: async (id: number) => {
-    const usuario = await UsuarioRepository.buscarPorId(id)
+
+  // idSolicitante e perfilSolicitante determinam se a senha é incluída na resposta
+  buscarPorId: async (idAlvo: number, idSolicitante: number, perfilSolicitante: string) => {
+    // Inclui senha só se for o próprio usuário logado ou um ADMIN
+    const incluirSenha = perfilSolicitante === 'ADMIN' || idSolicitante === idAlvo
+    const usuario = await UsuarioRepository.buscarPorId(idAlvo, incluirSenha)
     if (!usuario) throw new Error('Usuário não encontrado')
     return usuario
   },
-  listarTodos: async () => {
-  return UsuarioRepository.listarTodos()
-}
+
+  // busca? = termo opcional para filtrar por nome ou email
+  listarTodos: async (busca?: string) => {
+    return UsuarioRepository.listarTodos(busca)
+  }
 }
 
-//Valida se os campos obrigatórios do perfil foram enviados
+// Valida se os campos obrigatórios do perfil foram enviados
 function validarCamposPorPerfil(dados: DadosCadastro) {
   if (dados.perfil === 'ESTUDANTE') {
     if (!dados.tipoEstagio)

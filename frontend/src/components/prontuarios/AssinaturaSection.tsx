@@ -22,8 +22,8 @@ export const AssinaturaSection: React.FC<AssinaturaSectionProps> = ({
         <div>
           <div className="flex items-center gap-2">
             <h2 className="font-semibold text-gray-900">Assinatura</h2>
-            <Badge variant={prontuario.assinado ? 'success' : 'warning'}>
-              {prontuario.assinado ? 'Assinado' : 'Aguardando professor'}
+            <Badge variant={prontuario.status === 'ASSINADO' ? 'success' : 'warning'}>
+              {prontuario.status === 'ASSINADO' ? 'Assinado' : 'Aguardando professor'}
             </Badge>
           </div>
           <p className="mt-2 text-sm text-gray-500">
@@ -31,7 +31,7 @@ export const AssinaturaSection: React.FC<AssinaturaSectionProps> = ({
           </p>
         </div>
 
-        {podeAssinar && !prontuario.assinado && (
+        {podeAssinar && prontuario.status !== 'ASSINADO' && (
           <Button type="button" loading={loading} onClick={() => void onAssinar()}>
             Assinar prontuário
           </Button>

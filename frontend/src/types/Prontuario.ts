@@ -1,9 +1,12 @@
 export interface Prontuario {
   id: number;
   pacienteNome: string;
-  anamnese?: string | null;
+  evolucaoClinica?: string | null; 
   procedimentos?: string | null;
-  assinado: boolean;
+  status: 'EM_ANDAMENTO' | 'ASSINADO' | 'ARQUIVADO'; 
+  examesSolicitados?: string | null;
+  prescricoes?: string | null;
+  dataAtendimento?: string;
   createdAt: string;
   updatedAt: string;
   estudanteId: number;
@@ -12,11 +15,11 @@ export interface Prontuario {
 
 export interface CriarProntuarioDTO {
   pacienteNome: string;
-  anamnese?: string;
+  evolucaoClinica?: string;  
   procedimentos?: string;
 }
 
 export interface EditarProntuarioDTO {
-  anamnese?: string;
+  evolucaoClinica?: string;
   procedimentos?: string;
 }
