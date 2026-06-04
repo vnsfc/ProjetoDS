@@ -14,9 +14,14 @@ export const AgendaPage: React.FC = () => {
   // Controle de estado local para a data clicada no calendário
   const [dataSelecionada, setDataSelecionada] = useState<string>(dataHojeString);
 
+  const normalizarData = (data: string): string => { //agora vai colocar todas em dd/mm/aaaa
+    const d = new Date(data)
+    return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`
+}
+
   // Filtra os agendamentos pelo dia selecionado
   const agendamentosDoDia = todosAgendamentos.filter(
-    (agendamento) => agendamento.data === dataSelecionada
+    (agendamento) => normalizarData(agendamento.data) === dataSelecionada
   );
 
   return (
