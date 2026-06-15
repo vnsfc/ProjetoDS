@@ -20,6 +20,14 @@ export const AgendaController = {
       res.status(400).json({ erro: error.message })
     }
   },
+  listarAgendamentos: async (req: Request, res: Response): Promise<void> => {
+  try {
+    const agendamentos = await AgendaRepository.listarAgendamentos()
+    res.json(agendamentos)
+  } catch (error: any) {
+    res.status(400).json({ erro: error.message })
+  }
+},
 //efetiva o agendamento de um paciente em uma oferta disponivel (SCRUM-25)
 //new Date() = converte a data que veio como texto do frontend para formato de data
   criarAgendamento: async (req: Request, res: Response): Promise<void> => {

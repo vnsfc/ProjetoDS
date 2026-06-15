@@ -10,4 +10,5 @@ router.use(autenticar) //obs: nenhuma rota de agendamento funciona sem estar log
 router.post('/espera', AgendaController.criarEspera) //cadastra paciente na fila de espera (SCRUM-24)
 router.get('/espera', AgendaController.listarEspera) //lista a fila ordenada por prioridade (SCRUM-24)
 router.post('/', AgendaController.criarAgendamento) // efetiva o agendamento de um paciente (SCRUM-25)
+router.get('/', AgendaController.listarAgendamentos)
 export default router
