@@ -37,5 +37,15 @@ export const UsuarioController = {
     } catch (error: any) {
       res.status(400).json({ erro: error.message })
     }
+  },
+  buscarPorId: async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id, perfil } = (req as any).usuario
+    const idAlvo = Number(req.params.id)
+    const usuario = await UsuarioService.buscarPorId(idAlvo, id, perfil)
+    res.json(usuario)
+  } catch (error: any) {
+    res.status(404).json({ erro: error.message })
   }
+}
 }
