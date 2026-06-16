@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useProntuarios } from '@/hooks/useProntuarios';
 import type { Prontuario } from '@/types';
 
-type StatusFiltro = 'TODOS' | 'EM_ANDAMENTO' | 'ASSINADO' | 'ARQUIVADO';
+type StatusFiltro = 'TODOS' | 'EM_ANDAMENTO' | 'ASSINADO';
 
 export const ProntuariosPage: React.FC = () => {
   const navigate = useNavigate();
@@ -28,7 +28,6 @@ export const ProntuariosPage: React.FC = () => {
     { valor: 'TODOS', label: 'Todos' },
     { valor: 'EM_ANDAMENTO', label: 'Em andamento' },
     { valor: 'ASSINADO', label: 'Assinado' },
-    { valor: 'ARQUIVADO', label: 'Arquivado' },
   ];
 
   return (
