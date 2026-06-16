@@ -14,6 +14,7 @@ import { ProntuariosPage } from '@/pages/ProntuariosPage'
 // ── Pessoa 1 ──────────────────────────────────────────────────────────
 
 import { RegisterPage } from '@/pages/RegisterPage'
+import { PerfilPage } from '@/pages/PerfilPage'
 import { LoginPage } from '@/pages/Loginpage'
 
 
@@ -36,7 +37,7 @@ export function AppRoutes() {
         <Route element={<PrivateRoute />}>
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/perfil"    element={<div className="p-8">Perfil</div>} />
+            <Route path="/perfil"    element={<PerfilPage />} />
 
             <Route path="/prontuarios" element={<ProntuariosPage />} />
             <Route path="/prontuarios/:id" element={<ProntuarioDetailPage />} />
