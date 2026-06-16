@@ -7,4 +7,5 @@ const router = Router()
 router.post('/cadastro', UsuarioController.cadastrar)
 router.get('/me', autenticar, UsuarioController.me)
 router.get('/', autenticar, autorizar('ADMIN'), UsuarioController.listarTodos)
+router.get('/:id', autenticar, autorizar('ADMIN'), UsuarioController.buscarPorId)
 export default router
