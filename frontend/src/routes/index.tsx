@@ -12,7 +12,7 @@ import { ProntuarioDetailPage } from '@/pages/ProntuarioDetailPage'
 import { ProntuariosPage } from '@/pages/ProntuariosPage'
 
 // ── Pessoa 1 ──────────────────────────────────────────────────────────
-import { LoginPage } from '@/pages/LoginPage'
+import { LoginPage } from '@/pages/Loginpage'
 import { RegisterForm } from '@/components/RegisterForm'
 
 // ── Outras pessoas (descomentar quando prontos) ────────────────────────
