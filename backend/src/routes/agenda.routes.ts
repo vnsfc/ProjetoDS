@@ -11,12 +11,5 @@ router.use(autenticar) //obs: nenhuma rota de agendamento funciona sem estar log
 router.post('/espera', AgendaController.criarEspera) //cadastra paciente na fila de espera (SCRUM-24)
 router.get('/espera', AgendaController.listarEspera) //lista a fila ordenada por prioridade (SCRUM-24)
 router.post('/', AgendaController.criarAgendamento) // efetiva o agendamento de um paciente (SCRUM-25)
-router.get('/', async (req, res) => {
-  try {
-    const agendamentos = await AgendaRepository.listarAgendamentos()
-    res.json(agendamentos)
-  } catch (error: any) {
-    res.status(400).json({ erro: error.message })
-  }
-})
+router.get('/', AgendaController.listarAgendamentos)
 export default router
