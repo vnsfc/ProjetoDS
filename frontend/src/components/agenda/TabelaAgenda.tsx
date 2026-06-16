@@ -37,15 +37,20 @@ export const AgendaTable: React.FC<AgendaTableProps> = ({
             <tbody className="bg-white divide-y divide-gray-200">
               {agendamentosDoDia.length > 0 ? (
                 agendamentosDoDia
-                  .sort((a, b) => a.horario.localeCompare(b.horario))
+                  .sort((a, b) => new Date(a.data).getTime() - new Date(b.data).getTime())
                   .map((item) => (
                     <tr key={item.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.paciente}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-semibold">{item.horario}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {new Date(item.data).toLocaleDateString('pt-BR')}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-semibold">
+                        {new Date(item.data).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <span className={`px-2 py-1 rounded-full text-xs font-bold ${
-                          item.status === 'CONFIRMADO' ? 'bg-green-100 text-green-700' : 
-                          item.status === 'CANCELADO' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
+                          item.status === 'AGENDADO'  ? 'bg-green-100 text-green-700' :
+                          item.status === 'CANCELADO' ? 'bg-red-100 text-red-700' :
+                                                        'bg-yellow-100 text-yellow-700'
                         }`}>
                           {item.status}
                         </span>

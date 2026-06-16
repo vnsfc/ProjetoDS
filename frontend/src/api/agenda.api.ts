@@ -1,9 +1,9 @@
 export interface PacienteFila {
   id: string | number;
-  nome: string;
-  horaChegada?: string; 
+  pacienteNome: string;  // campo retornado pelo backend
+  createdAt?: string;    // horário de entrada na fila
   prioridade: string;
-  status: string;
+  status?: string;       // não existe no model, mas componente exibe fallback 'AGUARDANDO'
 }
 
 export const fetchFilaEspera = async (token: string): Promise<PacienteFila[]> => {
@@ -28,10 +28,10 @@ export const fetchFilaEspera = async (token: string): Promise<PacienteFila[]> =>
 
 export interface Agendamento {
   id: string | number;
-  paciente: string;
-  data: string; 
-  horario: string;
-  status: 'CONFIRMADO' | 'PENDENTE' | 'CANCELADO';
+  data: string;
+  status: 'DISPONIVEL' | 'AGENDADO' | 'CANCELADO';  // valores reais do backend
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export const fetchAgenda = async (token: string): Promise<Agendamento[]> => {
