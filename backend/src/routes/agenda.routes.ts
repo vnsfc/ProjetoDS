@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { AgendaController } from '../controllers/AgendaController'
+import { AgendaRepository } from '../repositories/AgendaRepository'
 import { autenticar } from '../middlewares/authRoles'
 //Router = mini servidor de rotas do Express
 //cada arquivo de rotas cuida de um dominio separado
@@ -10,4 +11,12 @@ router.use(autenticar) //obs: nenhuma rota de agendamento funciona sem estar log
 router.post('/espera', AgendaController.criarEspera) //cadastra paciente na fila de espera (SCRUM-24)
 router.get('/espera', AgendaController.listarEspera) //lista a fila ordenada por prioridade (SCRUM-24)
 router.post('/', AgendaController.criarAgendamento) // efetiva o agendamento de um paciente (SCRUM-25)
+router.get('/', async (req, res) => {
+  try {
+    const agendamentos = await AgendaRepository.listarAgendamentos()
+    res.json(agendamentos)
+  } catch (error: any) {
+    res.status(400).json({ erro: error.message })
+  }
+})
 export default router
