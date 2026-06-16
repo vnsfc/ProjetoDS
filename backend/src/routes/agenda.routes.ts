@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { AgendaController } from '../controllers/AgendaController'
+import { AgendaRepository } from '../repositories/AgendaRepository'
 import { autenticar } from '../middlewares/authRoles'
 //Router = mini servidor de rotas do Express
 //cada arquivo de rotas cuida de um dominio separado
