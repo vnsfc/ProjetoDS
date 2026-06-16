@@ -66,52 +66,20 @@ const useDashboardData = (perfil: UserPerfil): DashData => {
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-      const calls: Promise<void>[] = [];
+      try {
+        // Uma única chamada por perfil — backend agrega os dados necessários
+        const rota = `/dashboard/${perfil.toLowerCase()}`;
+        const { data } = await axiosInstance.get(rota);
 
-      // ESTUDANTE, PROFESSOR e ADMIN — backend filtra por perfil automaticamente
-      if (['ESTUDANTE', 'PROFESSOR', 'ADMIN'].includes(perfil)) {
-        calls.push(
-          axiosInstance
-            .get<ProntuarioDash[]>('/prontuarios')
-            .then(r => setProntuarios(r.data))
-            .catch(() => {}),
-        );
+        if (data.prontuarios) setProntuarios(data.prontuarios);
+        if (data.fila)        setFila(data.fila);
+        if (data.ofertas)     setOfertas(data.ofertas);
+        if (data.usuarios)    setUsuarios(data.usuarios);
+      } catch {
+        // mantém estados vazios em caso de erro
+      } finally {
+        setLoading(false);
       }
-
-      // GET /agenda/espera — fila ordenada por prioridade
-      // Nota: /fila não está no proxy do Vite, mas /agenda/espera retorna os
-      // mesmos dados (mesmo FilaEsperaService.listarOrdenada) e já é proxied.
-      if (['NAPA', 'PROFESSOR', 'ADMIN'].includes(perfil)) {
-        calls.push(
-          axiosInstance
-            .get<FilaDash[]>('/agenda/espera')
-            .then(r => setFila(r.data))
-            .catch(() => {}),
-        );
-      }
-
-      // GET /ofertas — qualquer usuário autenticado
-      if (['NAPA', 'ADMIN'].includes(perfil)) {
-        calls.push(
-          axiosInstance
-            .get<OfertaDash[]>('/ofertas')
-            .then(r => setOfertas(r.data))
-            .catch(() => {}),
-        );
-      }
-
-      // GET /usuarios — somente ADMIN
-      if (perfil === 'ADMIN') {
-        calls.push(
-          axiosInstance
-            .get<UsuarioDash[]>('/usuarios')
-            .then(r => setUsuarios(r.data))
-            .catch(() => {}),
-        );
-      }
-
-      await Promise.all(calls);
-      setLoading(false);
     };
 
     load();
