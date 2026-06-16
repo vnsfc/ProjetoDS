@@ -24,12 +24,13 @@ export const ProntuarioService = {
     if (!prontuario) throw new Error('Prontuário não encontrado')
     return prontuario
   },
-  listarPorAluno: async (estudanteId: number) => {
-    return ProntuarioRepository.listarPorAluno(estudanteId)
+  
+  listarPorAluno: async (estudanteId: number, status?: string) => {
+    return ProntuarioRepository.listarPorAluno(estudanteId, status)
   },
 
-  listarTodos: async () => {
-    return ProntuarioRepository.listarTodos()
+  listarTodos: async (status?: string) => {
+    return ProntuarioRepository.listarTodos(status)
   },
 
   atualizar: async (

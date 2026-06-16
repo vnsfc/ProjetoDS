@@ -34,24 +34,25 @@ export const ProntuarioRepository = {
       }
     })
   },
-
-  listarPorAluno: async (estudanteId: number) => {
+  listarPorAluno: async (estudanteId: number, status?: string) => {
     return prisma.prontuario.findMany({
-      where: { estudanteId },
+      where: { 
+        estudanteId,
+        ...(status ? { status } : {})  // filtra por status se informado
+      },
       orderBy: { dataAtendimento: 'desc' }
     })
   },
-
-  listarTodos: async () => {
+  listarTodos: async (status?: string) => {
     return prisma.prontuario.findMany({
+      where: status ? { status } : {},  // filtra por status se informado
       orderBy: { dataAtendimento: 'desc' },
       include: {
         estudante: { select: { id: true, nome: true } },
         professor: { select: { id: true, nome: true } }
-      }
-    })
-  },
-
+        }
+      })
+    },
   atualizar: async (id: number, data: DadosAtualizarProntuario) => {
     return prisma.prontuario.update({ where: { id }, data })
   }
