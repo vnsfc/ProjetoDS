@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  # Backend
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: projetods_backend
+    restart: always
+    ports:
+      - "3333:3000" 
+    env_file:
+      - ./backend/.env
+    volumes:
+      - sqlite_data:/app/prisma
+
+  # Frontend
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: projetods_frontend
+    restart: always
+    ports:
+      - "8080:80" 
+    depends_on:
+      - backend
+
+volumes:
+  sqlite_data:

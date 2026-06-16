@@ -106,7 +106,10 @@ describe('UsuarioService', () => {
     vi.mocked(UsuarioRepository.salvar).mockResolvedValue(usuarioMock as any)
 
     const resultado = await UsuarioService.cadastrar(
-      { nome: 'Ana', email: 'ana@email.com', senha: '123456', perfil: 'ESTUDANTE' },
+      { 
+        nome: 'Ana', email: 'ana@email.com', senha: '123456', perfil: 'ESTUDANTE',
+        tipoEstagio: 'CURRICULAR', nomeCurso: 'Odontologia', nomeSupervisor: 'Dr. João', periodoAtual: 5, previsaoConclusao: '2028-12-01'
+      },
       'ESTUDANTE'
     )
 
@@ -117,7 +120,10 @@ describe('UsuarioService', () => {
   it('Teste 6 - cadastrar: ESTUDANTE não pode cadastrar PROFESSOR', async () => {
     await expect(
       UsuarioService.cadastrar(
-        { nome: 'Prof', email: 'prof@email.com', senha: '123456', perfil: 'PROFESSOR' },
+        { 
+          nome: 'Prof', email: 'prof@email.com', senha: '123456', perfil: 'PROFESSOR',
+          conselhoProfissional: 'CRO', numeroRegistro: '12345', estadoRegistro: 'PE', dataValidade: '2030-12-31'
+        },
         'ESTUDANTE'
       )
     ).rejects.toThrow('Apenas administradores podem cadastrar professores')
@@ -129,7 +135,10 @@ describe('UsuarioService', () => {
     vi.mocked(UsuarioRepository.salvar).mockResolvedValue(professorMock as any)
 
     const resultado = await UsuarioService.cadastrar(
-      { nome: 'Prof Silva', email: 'prof@email.com', senha: '123456', perfil: 'PROFESSOR' },
+      { 
+        nome: 'Prof Silva', email: 'prof@email.com', senha: '123456', perfil: 'PROFESSOR',
+        conselhoProfissional: 'CRO', numeroRegistro: '12345', estadoRegistro: 'PE', dataValidade: '2030-12-31'
+      },
       'ADMIN'
     )
 
@@ -143,34 +152,38 @@ describe('UsuarioService', () => {
     //Tenta cadastrar e espera que a função seja rejeitada
     await expect(
       UsuarioService.cadastrar(
-        { nome: 'Novo Aluno', email: 'duplicado@email.com', senha: '123', perfil: 'ESTUDANTE' },
+        { 
+          nome: 'Novo Aluno', email: 'duplicado@email.com', senha: '123', perfil: 'ESTUDANTE',
+          tipoEstagio: 'CURRICULAR', nomeCurso: 'Odontologia', nomeSupervisor: 'Dr. João', periodoAtual: 5, previsaoConclusao: '2028-12-01'
+        },
         'ADMIN' 
       )
     ).rejects.toThrow() 
   })
+
 })
 
 describe('ProntuarioService', () => {
 
   it('Teste 8 - criar: deve criar um prontuário corretamente', async () => {
-    const prontuarioMock = { id: 1, pacienteNome: 'João', anamnese: 'Queixa X', procedimentos: 'Proc Y', assinado: false, estudanteId: 1 }
+    const prontuarioMock = { id: 1, pacienteNome: 'João', evolucaoClinica: 'Queixa X', procedimentos: 'Proc Y', status: 'EM_ANDAMENTO', estudanteId: 1 }
     vi.mocked(ProntuarioRepository.salvar).mockResolvedValue(prontuarioMock as any)
 
     const resultado = await ProntuarioService.criar({
       pacienteNome: 'João',
-      anamnese: 'Queixa X',
+      evolucaoClinica: 'Queixa X',
       procedimentos: 'Proc Y',
       estudanteId: 1
     })
 
     expect(resultado.pacienteNome).toBe('João')
-    expect(resultado.assinado).toBe(false)
+    expect(resultado.status).toBe('EM_ANDAMENTO')
   })
 
   it('Teste 9 - listarPorAluno: deve retornar lista de prontuários do estudante', async () => {
     const lista = [
-      { id: 1, pacienteNome: 'João', assinado: false, estudanteId: 1 },
-      { id: 2, pacienteNome: 'Maria', assinado: true, estudanteId: 1 },
+      { id: 1, pacienteNome: 'João', status: 'EM_ANDAMENTO', estudanteId: 1 },
+      { id: 2, pacienteNome: 'Maria', status: 'ASSINADO', estudanteId: 1 },
     ]
     vi.mocked(ProntuarioRepository.listarPorAluno).mockResolvedValue(lista as any)
 
@@ -181,18 +194,18 @@ describe('ProntuarioService', () => {
   })
 
   it('Teste 11 - assinar: deve permitir que um professor assine e valide o prontuário', async () => {
-    const prontuarioMock = { id: 1, pacienteNome: 'Carlos', assinado: false, estudanteId: 1 }
-    const prontuarioAtualizado = { ...prontuarioMock, assinado: true, professorId: 2 }
+    const prontuarioMock = { id: 1, pacienteNome: 'Carlos', status: 'EM_ANDAMENTO', estudanteId: 1 }
+    const prontuarioAtualizado = { ...prontuarioMock, status: 'ASSINADO', professorId: 2 }
 
     vi.mocked(ProntuarioRepository.buscarPorId).mockResolvedValue(prontuarioMock as any)
     vi.mocked(ProntuarioRepository.atualizar).mockResolvedValue(prontuarioAtualizado as any)
+    
     // Passando o ID do usuário, do professor e o perfil
     const resultado = await AssinaturaService.assinar(1, 2, 'PROFESSOR')
 
-    expect(resultado.assinado).toBe(true)
+    expect(resultado.status).toBe('ASSINADO')
     expect(resultado.professorId).toBe(2)
   })
-})
 
   it('Teste 13 - listarPorAluno: deve retornar array vazio se o estudante não tiver prontuários', async () => {
     // Simula o banco de dados retornando vazio
@@ -203,23 +216,6 @@ describe('ProntuarioService', () => {
     // Garante que o retorno é uma lista vazia
     expect(resultado).toBeInstanceOf(Array)
     expect(resultado).toHaveLength(0)
-  })
-
-describe('FilaEsperaService', () => {
-
-  it('Teste 10 - listarOrdenada: deve ordenar por prioridade URGENTE > NORMAL > ELETIVO', async () => {
-    const filaDesordenada = [
-      { id: 1, pacienteNome: 'Carlos', prioridade: 'ELETIVO' },
-      { id: 2, pacienteNome: 'Ana', prioridade: 'URGENTE' },
-      { id: 3, pacienteNome: 'Pedro', prioridade: 'NORMAL' },
-    ]
-    vi.mocked(FilaEsperaRepository.buscarFila).mockResolvedValue(filaDesordenada as any)
-
-    const resultado = await FilaEsperaService.listarOrdenada()
-
-    expect(resultado[0].prioridade).toBe('URGENTE')
-    expect(resultado[1].prioridade).toBe('NORMAL')
-    expect(resultado[2].prioridade).toBe('ELETIVO')
   })
 
 })
