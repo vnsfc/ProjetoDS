@@ -7,7 +7,9 @@ export const RegisterForm: React.FC = () => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [perfil, setPerfil] = useState<UserPerfil>('ESTUDANTE');
+  // Cadastro público é exclusivo para ESTUDANTE.
+  // PROFESSOR, NAPA e ADMIN só podem ser criados por um ADMIN autenticado.
+  const perfil: UserPerfil = 'ESTUDANTE';
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
@@ -47,12 +49,15 @@ export const RegisterForm: React.FC = () => {
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700">Perfil</label>
-        <select value={perfil} onChange={(e) => setPerfil(e.target.value as UserPerfil)} className="mt-1 w-full px-3 py-2 border rounded-md bg-white">
-          <option value="ESTUDANTE">Estudante (Aluno)</option>
-          <option value="PROFESSOR">Professor (Supervisor)</option>
-          <option value="NAPA">NAPA</option>
-          <option value="ADMIN">Administrador</option>
-        </select>
+        <input
+          type="text"
+          value="Estudante (Aluno)"
+          disabled
+          className="mt-1 w-full px-3 py-2 border rounded-md bg-gray-100 text-gray-500 cursor-not-allowed"
+        />
+        <p className="mt-1 text-xs text-gray-400">
+          Outros perfis (Professor, NAPA, Admin) são criados pelo administrador do sistema.
+        </p>
       </div>
       <button type="submit" className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md transition-colors">
         Criar Conta

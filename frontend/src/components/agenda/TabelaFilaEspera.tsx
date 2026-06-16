@@ -32,8 +32,10 @@ export const FilaEsperaTable: React.FC<FilaEsperaTableProps> = ({ fila, loading,
         {fila.length > 0 ? (
           fila.map((paciente) => (
             <tr key={paciente.id} className="hover:bg-gray-50 transition-colors">
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{paciente.nome}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{paciente.horaChegada || 'N/A'}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{paciente.pacienteNome}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {paciente.createdAt ? new Date(paciente.createdAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 'N/A'}
+              </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 <PrioridadeBadge prioridade={paciente.prioridade} />
               </td>

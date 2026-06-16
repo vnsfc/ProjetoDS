@@ -14,7 +14,7 @@ export const ProntuarioForm: React.FC<ProntuarioFormProps> = ({
   onSubmit,
 }) => {
   const [pacienteNome, setPacienteNome] = useState(prontuario?.pacienteNome ?? '');
-  const [anamnese, setAnamnese] = useState(prontuario?.anamnese ?? '');
+  const [evolucaoClinica, setEvolucaoClinica] = useState(prontuario?.evolucaoClinica ?? '');
   const [procedimentos, setProcedimentos] = useState(prontuario?.procedimentos ?? '');
 
   const isEdicao = Boolean(prontuario);
@@ -22,10 +22,10 @@ export const ProntuarioForm: React.FC<ProntuarioFormProps> = ({
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Na edição o backend só aceita anamnese e procedimentos.
+    // Na edição o backend só aceita evolucaoClinica e procedimentos.
     const dados = isEdicao
-      ? { anamnese, procedimentos }
-      : { pacienteNome, anamnese, procedimentos };
+      ? { evolucaoClinica, procedimentos }
+      : { pacienteNome, evolucaoClinica, procedimentos };
 
     await onSubmit(dados);
   };
@@ -42,13 +42,13 @@ export const ProntuarioForm: React.FC<ProntuarioFormProps> = ({
         />
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="anamnese" className="text-sm font-medium text-gray-700">
-            Anamnese
+          <label htmlFor="evolucaoClinica" className="text-sm font-medium text-gray-700">
+            Evolução Clínica / Anamnese
           </label>
           <textarea
-            id="anamnese"
-            value={anamnese}
-            onChange={(event) => setAnamnese(event.target.value)}
+            id="evolucaoClinica"
+            value={evolucaoClinica}
+            onChange={(event) => setEvolucaoClinica(event.target.value)}
             className="min-h-32 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Descreva a queixa, histórico e observações do atendimento."
           />
