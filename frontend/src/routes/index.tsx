@@ -12,8 +12,10 @@ import { ProntuarioDetailPage } from '@/pages/ProntuarioDetailPage'
 import { ProntuariosPage } from '@/pages/ProntuariosPage'
 
 // ── Pessoa 1 ──────────────────────────────────────────────────────────
+
+import { RegisterPage } from '@/pages/RegisterPage'
 import { LoginPage } from '@/pages/Loginpage'
-import { RegisterForm } from '@/components/RegisterForm'
+
 
 // ── Outras pessoas (descomentar quando prontos) ────────────────────────
 // import { TriagemPage }     from '@/pages/TriagemPage'        // Pessoa 4
@@ -25,8 +27,8 @@ export function AppRoutes() {
     <BrowserRouter>
       <Routes>
         {/* Rotas públicas */}
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/login"    element={<LoginPage />} />
-        <Route path="/register" element={<RegisterForm />} />
         <Route path="/"         element={<Navigate to="/dashboard" replace />} />
 
 
