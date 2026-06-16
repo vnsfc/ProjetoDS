@@ -54,5 +54,21 @@ export const ProntuarioService = {
       throw new Error('Prontuário já assinado não pode ser editado')
     }
     return ProntuarioRepository.atualizar(id, dados)
+  },
+  arquivar: async (id: number, perfilSolicitante: string) => {
+  // Só ADMIN pode arquivar prontuários
+  if (perfilSolicitante !== 'ADMIN') {
+    throw new Error('Apenas administradores podem arquivar prontuários')
   }
+
+  const prontuario = await ProntuarioRepository.buscarPorId(id)
+  if (!prontuario) throw new Error('Prontuário não encontrado')
+
+  // Só arquiva se estiver assinado — não faz sentido arquivar em andamento
+  if (prontuario.status !== 'ASSINADO') {
+    throw new Error('Apenas prontuários assinados podem ser arquivados')
+  }
+
+  return ProntuarioRepository.atualizar(id, { status: 'ARQUIVADO' })
+}
 }

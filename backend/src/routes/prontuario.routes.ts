@@ -15,4 +15,5 @@ router.get('/:id', ProntuarioController.buscarPorId)
 router.put('/:id', autorizar('ESTUDANTE'), ProntuarioController.atualizar)
 //Assinar: só PROFESSOR
 router.post('/:id/assinar', autorizar('PROFESSOR'), ProntuarioController.assinar)
+router.patch('/:id/arquivar', autorizar('ADMIN'), ProntuarioController.arquivar)  //so admin/coordenador
 export default router

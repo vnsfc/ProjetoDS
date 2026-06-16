@@ -69,5 +69,14 @@ export const ProntuarioController = {
     } catch (error: any) {
       res.status(403).json({ erro: error.message })
     }
+  },
+  arquivar: async (req: Request, res: Response): Promise<void> => {
+  try {
+    const perfil = (req as any).usuario?.perfil
+    const prontuario = await ProntuarioService.arquivar(Number(req.params.id), perfil)
+    res.json(prontuario)
+  } catch (error: any) {
+    res.status(400).json({ erro: error.message })
   }
+}
 }
