@@ -37,8 +37,8 @@ export const ProntuarioList: React.FC<ProntuarioListProps> = ({ prontuarios }) =
               </p>
             </div>
 
-            <Badge variant={prontuario.assinado ? 'success' : 'warning'}>
-              {prontuario.assinado ? 'Assinado' : 'Pendente'}
+            <Badge variant={prontuario.status === 'ASSINADO' ? 'success' : 'warning'}>
+              {prontuario.status === 'ASSINADO' ? 'Assinado' : 'Pendente'}
             </Badge>
           </div>
 
@@ -46,7 +46,7 @@ export const ProntuarioList: React.FC<ProntuarioListProps> = ({ prontuarios }) =
             <div>
               <p className="text-xs font-semibold uppercase text-gray-400">Anamnese</p>
               <p className="mt-1 line-clamp-2 text-sm text-gray-600">
-                {prontuario.anamnese || 'Sem anamnese registrada.'}
+                {prontuario.evolucaoClinica || 'Sem anamnese registrada.'}
               </p>
             </div>
 
