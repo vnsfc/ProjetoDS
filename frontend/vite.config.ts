@@ -27,6 +27,10 @@ export default defineConfig({
         target: 'http://localhost:3000',
         changeOrigin: true,
       },
+      '/fila': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
       '/ofertas': {
         target: 'http://localhost:3000',
         changeOrigin: true,
