@@ -88,5 +88,12 @@ export const UsuarioRepository = {
       }
     })
     return omitirSenha(usuario)
-  }
+  },
+
+  deletar: async (id: number) => {
+    // Presumindo que você esteja usando Prisma, o comando será assim:
+    return prisma.usuario.delete({
+      where: { id }
+    });
+  },
 }
