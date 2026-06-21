@@ -9,8 +9,8 @@ RUN npm run build
 # Servidor Nginx
 FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*
-COPY --from=builder /app/dist /usr/share/nginx/html
-# Substitui a config padrão do Nginx pela nossa (proxy para o backend + SPA fallback)
+# Copia o build do Vite para dentro da pasta /ho
+COPY --from=builder /app/dist /usr/share/nginx/html/ho
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

@@ -1,3 +1,5 @@
+import api from '../api/axiosInstance';
+
 export interface PacienteFila {
   id: string | number;
   pacienteNome: string;  // campo retornado pelo backend
@@ -6,50 +8,34 @@ export interface PacienteFila {
   status?: string;       // não existe no model, mas componente exibe fallback 'AGUARDANDO'
 }
 
-export const fetchFilaEspera = async (token: string): Promise<PacienteFila[]> => {
-  const response = await fetch('/agenda/espera', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}` 
+export const fetchFilaEspera = async (_token: string): Promise<PacienteFila[]> => {
+  try {
+    const response = await api.get<PacienteFila[]>('/agenda/espera');
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.status === 401) {
+      throw new Error('Acesso negado. Você precisa fazer login para acessar a fila.');
     }
-  }); 
-
-  if (response.status === 401) {
-    throw new Error('Acesso negado. Você precisa fazer login para acessar a fila.');
-  }
-
-  if (!response.ok) {
     throw new Error('Falha ao buscar os dados da fila.');
   }
-
-  return response.json();
 };
 
 export interface Agendamento {
   id: string | number;
   data: string;
-  status: 'DISPONIVEL' | 'AGENDADO' | 'CANCELADO';  // valores reais do backend
+  status: 'DISPONIVEL' | 'AGENDADO' | 'CANCELADO';  
   createdAt?: string;
   updatedAt?: string;
 }
 
-export const fetchAgenda = async (token: string): Promise<Agendamento[]> => {
-  const response = await fetch('/agenda', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}` 
+export const fetchAgenda = async (_token: string): Promise<Agendamento[]> => {
+  try {
+    const response = await api.get<Agendamento[]>('/agenda');
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.status === 401) {
+      throw new Error('Acesso negado. Sessão expirada, faça login novamente.');
     }
-  });
-
-  if (response.status === 401) {
-    throw new Error('Acesso negado. Sessão expirada, faça login novamente.');
-  }
-
-  if (!response.ok) {
     throw new Error('Falha ao buscar os dados da agenda no servidor.');
   }
-
-  return response.json();
 };

@@ -57,6 +57,13 @@ export const UsuarioService = {
     delete update.email
 
     return UsuarioRepository.atualizar(idAlvo, update)
+  },
+
+  deletar: async (idAlvo: number) => {
+    // Verifica se o usuário existe
+    const usuario = await UsuarioRepository.buscarPorId(idAlvo, false);
+    if (!usuario) throw new Error('Usuário não encontrado');
+    return UsuarioRepository.deletar(idAlvo);
   }
 }
 

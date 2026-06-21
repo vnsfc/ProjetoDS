@@ -1,5 +1,6 @@
 import React from 'react';
 import { RegisterForm } from '@/components/RegisterForm';
+import { Link } from 'react-router-dom';
 
 export const RegisterPage: React.FC = () => {
   return (
@@ -28,12 +29,12 @@ export const RegisterPage: React.FC = () => {
         {/* Link de navegação para retornar ao Login */}
         <div className="mt-8 text-sm">
           <span className="text-[#94a3b8]">Já possui acesso?</span>
-          <a 
-            href="/login" 
+          <Link 
+            to="/login" 
             className="text-[#38bdf8] no-underline font-medium ml-1 transition-colors duration-200 hover:text-[#f8fafc]"
           >
             Faça login
-          </a>
+          </Link>
         </div>
       </div>
     </div>

@@ -70,23 +70,33 @@ export const UsuarioRepository = {
         email:          d.email,
         senha:          d.senha,
         perfil:         d.perfil,
-        nacionalidade:  d.nacionalidade ?? 'Brasileira',
-        cpf:            d.cpf           ?? null,
-        telefone:       d.telefone      ?? null,
+        nacionalidade:  d.nacionalidade || 'Brasileira',
+        cpf:            d.cpf           || null,
+        telefone:       d.telefone      || null,
         dataNascimento: d.dataNascimento ? new Date(d.dataNascimento) : null,
-        clinicaAtuacao: d.clinicaAtuacao ?? null,
-        diasLivres:     d.diasLivres    ?? null,
-        tipoEstagio:       d.tipoEstagio       ?? null,
-        nomeSupervisor:    d.nomeSupervisor    ?? null,
-        nomeCurso:         d.nomeCurso         ?? null,
-        periodoAtual:      d.periodoAtual      ?? null,
+        clinicaAtuacao: d.clinicaAtuacao || null,
+        diasLivres:     d.diasLivres    || null,
+
+        // Campos de Estudante
+        tipoEstagio:       d.tipoEstagio       || null,
+        nomeSupervisor:    d.nomeSupervisor    || null,
+        nomeCurso:         d.nomeCurso         || null,
+        periodoAtual:      d.periodoAtual      ? Number(d.periodoAtual) : null,
         previsaoConclusao: d.previsaoConclusao ? new Date(d.previsaoConclusao) : null,
-        conselhoProfissional: d.conselhoProfissional ?? null,
-        numeroRegistro:       d.numeroRegistro       ?? null,
-        estadoRegistro:       d.estadoRegistro       ?? null,
+
+        // Campos de Professor
+        conselhoProfissional: d.conselhoProfissional || null,
+        numeroRegistro:       d.numeroRegistro       || null,
+        estadoRegistro:       d.estadoRegistro       || null,
         dataValidade:         d.dataValidade ? new Date(d.dataValidade) : null,
       }
     })
     return omitirSenha(usuario)
-  }
+  },
+
+  deletar: async (id: number) => {
+    return prisma.usuario.delete({
+      where: { id }
+    });
+  },
 }

@@ -3,6 +3,8 @@ import { PrivateRoute } from './privateRoute'
 // ── Pessoa 4 ──────────────────────────────────────────────────────────
 import { TriagemPage } from '@/pages/TriagemPage';
 import { AgendaPage } from '@/pages/AgendaPage';
+import { UsuariosPage }    from '@/pages/UsuariosPage'       
+
 // ── Pessoa 2 ──────────────────────────────────────────────────────────
 import { AppLayout } from '@/components/layout'
 import { DashboardPage } from '@/pages/DashboardPage'
@@ -21,11 +23,10 @@ import { LoginPage } from '@/pages/Loginpage'
 // ── Outras pessoas (descomentar quando prontos) ────────────────────────
 // import { TriagemPage }     from '@/pages/TriagemPage'        // Pessoa 4
 // import { AgendaPage }      from '@/pages/AgendaPage'         // Pessoa 5
-// import { UsuariosPage }    from '@/pages/UsuariosPage'       // Pessoa 5
 
 export function AppRoutes() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/ho">
       <Routes>
         {/* Rotas públicas */}
         <Route path="/register" element={<RegisterPage />} />
@@ -47,6 +48,7 @@ export function AppRoutes() {
 
             <Route path="/triagem"   element={<TriagemPage />} />
             <Route path="/agenda" element={<AgendaPage />} />
+            <Route path="/usuarios" element={<UsuariosPage />} />
 
           </Route>
         </Route>

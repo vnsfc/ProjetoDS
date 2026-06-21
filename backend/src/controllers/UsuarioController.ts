@@ -53,5 +53,26 @@ export const UsuarioController = {
     } catch (error: any) {
       res.status(404).json({ erro: error.message })
     }
+  },
+
+  atualizarPorId: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const idAlvo = Number(req.params.id);
+      const dados = req.body;
+      const usuarioAtualizado = await UsuarioService.atualizar(idAlvo, dados);
+      res.json(usuarioAtualizado);
+    } catch (error: any) {
+      res.status(400).json({ erro: error.message });
+    }
+  },
+
+  deletar: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const idAlvo = Number(req.params.id);
+      await UsuarioService.deletar(idAlvo);
+      res.status(204).send(); 
+    } catch (error: any) {
+      res.status(400).json({ erro: error.message });
+    }
   }
 }
