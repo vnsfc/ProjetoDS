@@ -26,7 +26,7 @@ import { LoginPage } from '@/pages/Loginpage'
 
 export function AppRoutes() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/ho">
       <Routes>
         {/* Rotas públicas */}
         <Route path="/register" element={<RegisterPage />} />
