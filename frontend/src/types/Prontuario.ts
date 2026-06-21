@@ -23,3 +23,12 @@ export interface EditarProntuarioDTO {
   evolucaoClinica?: string;
   procedimentos?: string;
 }
+
+export interface HistoricoRegistro {
+  id: string;
+  dataHora: string;
+  usuarioNome: string;
+  perfil: 'ESTUDANTE' | 'PROFESSOR' | 'ADMIN';
+  acao: 'CRIACAO' | 'EDICAO' | 'ASSINATURA' | 'ANEXO';
+  descricao: string;
+}
