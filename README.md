@@ -227,8 +227,17 @@ Frontend disponível em `http://localhost:5173`.
 
 O projeto está containerizado com `docker-compose.yml` na raiz, orquestrando dois serviços: `backend` e `frontend`.
 
+### 1. Clonar o repositório (se ainda não tiver feito)
+```bash
+git clone <LINK_DO_REPOSITORIO_AQUI>
+cd ProjetoDS
+```
+
+### 2. Criar os arquivos de ambiente
 > ⚠️ **Antes de rodar**, garanta que os arquivos `.env` existem em `backend/` e `frontend/` (copie de `.env.example` em cada pasta e preencha — veja [Variáveis de Ambiente](#variáveis-de-ambiente)). Sem eles, os containers sobem sem as configurações corretas.
 
+### 3. Subir os containers
+Execute o comando abaixo **na raiz do projeto** (mesma pasta onde está o `docker-compose.yml`):
 ```bash
 docker-compose up --build
 ```
