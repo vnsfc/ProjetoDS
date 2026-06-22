@@ -185,7 +185,7 @@ Depois de preencher o `.env`, continue:
 ```bash
 npx prisma migrate dev
 npx prisma generate
-npm run seed                # cria o primeiro usuário ADMIN
+npm run seed                
 npm run dev
 ```
 Backend disponível em `http://localhost:3000`.
