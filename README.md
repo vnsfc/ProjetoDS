@@ -1,4 +1,4 @@
-# Clínica Escola de Odontologia — UFPE 
+# Clínica Escola de Odontologia — UFPE
 > Sistema de gestão de prontuários, agendamentos e fila de espera da Clínica Escola de Odontologia do CIn/UFPE.
 > Projeto acadêmico desenvolvido na disciplina CIN0136 — Desenvolvimento de Software · 2026.1
 
@@ -164,7 +164,7 @@ Para rodar com Docker:
 
 ### 1. Clonar o repositório
 ```bash
-git clone https://github.com/SEU_USUARIO/ProjetoDS.git
+git clone <LINK_DO_REPOSITORIO_AQUI>
 cd ProjetoDS
 ```
 
@@ -172,7 +172,17 @@ cd ProjetoDS
 ```bash
 cd backend
 npm install
-cp .env.example .env        # crie e preencha o .env (veja seção abaixo)
+```
+
+Crie o arquivo `.env` copiando o exemplo e depois preencha com seus próprios valores (veja a seção [Variáveis de Ambiente](#variáveis-de-ambiente) abaixo para saber o que colocar):
+```bash
+cp .env.example .env
+```
+
+> Se o comando acima der erro de "arquivo não encontrado", crie o `.env` manualmente com o conteúdo mostrado na seção de Variáveis de Ambiente.
+
+Depois de preencher o `.env`, continue:
+```bash
 npx prisma migrate dev
 npx prisma generate
 npm run seed                # cria o primeiro usuário ADMIN
@@ -191,6 +201,15 @@ Em um novo terminal:
 ```bash
 cd frontend
 npm install
+```
+
+Crie o arquivo `.env` (mesma lógica do backend — veja [Variáveis de Ambiente](#variáveis-de-ambiente)):
+```bash
+cp .env.example .env
+```
+
+Depois:
+```bash
 npm run dev
 ```
 Frontend disponível em `http://localhost:5173`.
@@ -207,6 +226,8 @@ Frontend disponível em `http://localhost:5173`.
 ## Como rodar com Docker
 
 O projeto está containerizado com `docker-compose.yml` na raiz, orquestrando dois serviços: `backend` e `frontend`.
+
+> ⚠️ **Antes de rodar**, garanta que os arquivos `.env` existem em `backend/` e `frontend/` (copie de `.env.example` em cada pasta e preencha — veja [Variáveis de Ambiente](#variáveis-de-ambiente)). Sem eles, os containers sobem sem as configurações corretas.
 
 ```bash
 docker-compose up --build
@@ -232,8 +253,13 @@ Crie um arquivo `.env` dentro de `backend/`:
 
 ```env
 DATABASE_URL="file:./dev.db"
-JWT_SECRET="senha de sua escola"
+JWT_SECRET="Sua senha"
 ```
+
+> ⚠️ **Em produção, troque o `JWT_SECRET`** por uma string aleatória longa — qualquer pessoa que veja esse valor pode forjar tokens de autenticação válidos. Para gerar uma chave segura:
+> ```bash
+> node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+> ```
 
 No Docker, as variáveis também podem ser definidas via `docker-compose.yml` (já tem valores padrão configurados, mas sempre prefira sobrescrever `JWT_SECRET` em produção).
 
@@ -244,9 +270,7 @@ Crie um arquivo `.env` dentro de `frontend/`:
 VITE_API_URL=http://localhost:3333
 ```
 
-Essa variável diz ao frontend onde está o backend. O `axiosInstance.ts` lê `VITE_API_URL` e monta a URL base das requisições (`VITE_API_URL + /ho`). Sem ela, o frontend não sabe para onde mandar as chamadas quando rodando via Docker.
-
-> Em desenvolvimento local sem Docker (`npm run dev` no frontend e backend separados), essa variável também é necessária caso o backend não esteja em `localhost:3000` com proxy do Vite — confirme com o time qual o fluxo atual antes de omiti-la.
+Essa variável diz ao frontend onde está o backend. O `axiosInstance.ts` lê `VITE_API_URL` e monta a URL base das requisições (`VITE_API_URL + /ho`). Sem ela, o frontend não sabe para onde mandar as chamadas — necessária tanto em desenvolvimento local quanto via Docker.
 
 ---
 
@@ -268,7 +292,7 @@ Abre em `http://localhost:5555`.
 | `Prontuario` | Registros clínicos dos atendimentos, com histórico de status |
 | `FilaEspera` | Fila de pacientes aguardando atendimento, ordenada por prioridade |
 | `Agenda` | Agendamentos de consultas |
-| `Oferta` | Vagas de atendimento criadas pelo NAPA |  
+| `Oferta` | Vagas de atendimento criadas pelo NAPA |
 
 ---
 
@@ -384,9 +408,9 @@ ProjetoDS/
 | Perfil | Quem cria | Permissões principais |
 |---|---|---|
 | ESTUDANTE | Qualquer pessoa autenticada (ou ADMIN) | Criar e editar seus prontuários, editar perfil próprio |
-| PROFESSOR | ADMIN/COORDENADOR | Ver todos os prontuários, assinar |
-| NAPA | ADMIN/COORDENADOR | Gerenciar fila, agenda e ofertas |
-| ADMIN/COORDENADOR | Seed ou outro ADMIN/COORDENADOR | Acesso total, CRUD completo de usuários |
+| PROFESSOR | ADMIN | Ver todos os prontuários, assinar |
+| NAPA | ADMIN | Gerenciar fila, agenda e ofertas |
+| ADMIN | Seed ou outro ADMIN | Acesso total, CRUD completo de usuários |
 
 ---
 
