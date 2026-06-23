@@ -19,11 +19,6 @@ import { RegisterPage } from '@/pages/RegisterPage'
 import { PerfilPage } from '@/pages/PerfilPage'
 import { LoginPage } from '@/pages/Loginpage'
 
-
-// ── Outras pessoas (descomentar quando prontos) ────────────────────────
-// import { TriagemPage }     from '@/pages/TriagemPage'        // Pessoa 4
-// import { AgendaPage }      from '@/pages/AgendaPage'         // Pessoa 5
-
 export function AppRoutes() {
   return (
     <BrowserRouter basename="/ho">

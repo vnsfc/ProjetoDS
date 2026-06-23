@@ -13,12 +13,12 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      - DATABASE_URL=${DATABASE_URL:-file:./prisma/dev.db}
+      - DATABASE_URL=file:/app/prisma/dev.db
       - JWT_SECRET=${JWT_SECRET:-troque-este-segredo-em-producao}
       # Domínio de produção liberado no CORS
       - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:8080,http://localhost:5173,https://clinicasdigitais.cin.ufpe.br}
     volumes:
-      - sqlite_data:/app/prisma
+      - ./backend/prisma:/app/prisma
 
   # Frontend
   frontend:
@@ -31,6 +31,3 @@ services:
       - "8080:80"
     depends_on:
       - backend
-
-volumes:
-  sqlite_data:

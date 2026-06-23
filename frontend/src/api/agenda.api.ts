@@ -20,14 +20,25 @@ export const fetchFilaEspera = async (_token: string): Promise<PacienteFila[]> =
   }
 };
 
+export const atualizarStatusFila = async (id: string | number, novoStatus: string): Promise<void> => {
+  try {
+    // Usamos PATCH (ou PUT) porque estamos apenas atualizando uma propriedade
+    await api.patch(`/agenda/espera/${id}`, { status: novoStatus });
+  } catch (error: any) {
+    console.error("Erro na API ao atualizar status:", error);
+    throw new Error('Falha ao atualizar o status do paciente.');
+  }
+};
+
 export interface Agendamento {
   id: string | number;
   data: string;
-  status: 'DISPONIVEL' | 'AGENDADO' | 'CANCELADO';  
+  status: 'DISPONIVEL' | 'AGENDADO' | 'CANCELADO';
+  pacienteNome: string;   
+  usuarioId: number;      
   createdAt?: string;
   updatedAt?: string;
 }
-
 export const fetchAgenda = async (_token: string): Promise<Agendamento[]> => {
   try {
     const response = await api.get<Agendamento[]>('/agenda');

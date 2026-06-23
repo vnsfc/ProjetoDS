@@ -38,5 +38,5 @@ export const useAgenda = () => {
     return () => clearInterval(intervalId);
   }, [token]);
 
-  return { todosAgendamentos, loading, error, ultimaAtualizacao };
+  return { todosAgendamentos, loading, error, ultimaAtualizacao, refetch: carregarAgenda };
 };
