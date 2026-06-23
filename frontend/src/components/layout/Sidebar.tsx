@@ -27,10 +27,10 @@ const navItems: NavItem[] = [
     label: 'Fila de Espera',
     allowedPerfis: ['NAPA', 'ADMIN'],
   },
-  {
+  { 
     to: '/agenda',
     label: 'Agenda',
-    allowedPerfis: ['ADMIN'],
+    allowedPerfis: ['ESTUDANTE', 'PROFESSOR', 'NAPA', 'ADMIN'], 
   },
   {
     to: '/usuarios',

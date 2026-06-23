@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '@/api/axiosInstance'; // Assumindo seu setup de axios
+import api from '@/api/axiosInstance'; 
 
 export const ModalAgendamento = ({ onClose, onSave }: { onClose: () => void, onSave: () => void }) => {
   const [pacienteNome, setPacienteNome] = useState('');
@@ -9,8 +9,9 @@ export const ModalAgendamento = ({ onClose, onSave }: { onClose: () => void, onS
 
   useEffect(() => {
     api.get('/usuarios')
-        .then((res: { data: any[] }) => { // Adicionando tipagem aqui
-        setUsuarios(res.data.filter((u: any) => u.perfil !== 'ADMIN'));
+        .then((res: { data: any[] }) => { 
+          // Modificado: Filtra para exibir APENAS perfis 'ESTUDANTE'
+          setUsuarios(res.data.filter((u: any) => u.perfil === 'ESTUDANTE'));
         })
         .catch((err) => console.error("Erro ao buscar usuários:", err));
   }, []);
@@ -23,16 +24,15 @@ export const ModalAgendamento = ({ onClose, onSave }: { onClose: () => void, onS
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg w-96">
         <h2 className="text-xl font-bold mb-4">Novo Agendamento</h2>
         <input className="w-full border p-2 mb-2" placeholder="Nome do Paciente" onChange={e => setPacienteNome(e.target.value)} required />
         <input className="w-full border p-2 mb-2" type="datetime-local" onChange={e => setData(e.target.value)} required />
         
-        {/* Apenas mostra seleção de usuário se não for estudante */}
-        <select className="w-full border p-2 mb-4" onChange={e => setUsuarioId(e.target.value)}>
-          <option value="">Selecione o responsável</option>
-          {usuarios.map(u => <option key={u.id} value={u.id}>{u.nome} ({u.perfil})</option>)}
+        <select className="w-full border p-2 mb-4" onChange={e => setUsuarioId(e.target.value)} required>
+          <option value="">Selecione o responsável (Estudante)</option>
+          {usuarios.map(u => <option key={u.id} value={u.id}>{u.nome}</option>)}
         </select>
 
         <div className="flex justify-end gap-2">

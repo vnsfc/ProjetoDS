@@ -1,17 +1,42 @@
 import React from 'react';
-import { Agendamento } from '@/api/agenda.api';
+import { Agendamento, cancelarAgendamento } from '@/api/agenda.api';
+import { useAuth } from '@/hooks/useAuth';
 
 interface AgendaTableProps {
   agendamentosDoDia: Agendamento[];
   dataSelecionada: string;
   loading: boolean;
+  refetch: () => void; // <- 1. Declarando a nova propriedade aqui
 }
 
 export const AgendaTable: React.FC<AgendaTableProps> = ({ 
   agendamentosDoDia, 
   dataSelecionada, 
-  loading 
+  loading,
+  refetch // <- 2. Recebendo ela aqui
 }) => {
+  const { user, token } = useAuth();
+  const isAdmin = user?.perfil === 'ADMIN';
+
+  const handleCancelar = async (id: string | number) => {
+    if (!token) {
+      alert("Sessão expirada. Faça login novamente.");
+      return;
+    }
+
+    if (window.confirm("Tem certeza que deseja cancelar este atendimento?")) {
+      try {
+        await cancelarAgendamento(token, id);
+        
+        // 3. ADEUS RECARREGAMENTO FORÇADO! Olá recarregamento suave:
+        refetch(); 
+        
+      } catch (error) {
+        alert("Erro ao tentar cancelar o agendamento.");
+      }
+    }
+  };
+
   return (
     <div className="w-full lg:w-2/3 bg-white rounded-lg shadow overflow-hidden border border-gray-200 flex-1">
       <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
@@ -29,9 +54,13 @@ export const AgendaTable: React.FC<AgendaTableProps> = ({
             <thead className="bg-gray-50/50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paciente</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profissional</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Horário</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                {/* ✅ Coluna Ações removida */}
+                {/* Coluna Ações: Aparece apenas para o ADMIN */}
+                {isAdmin && (
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                )}
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -42,6 +71,9 @@ export const AgendaTable: React.FC<AgendaTableProps> = ({
                     <tr key={item.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {item.pacienteNome}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {item.usuario?.nome || 'Não definido'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-semibold">
                         {new Date(item.data).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
@@ -55,12 +87,23 @@ export const AgendaTable: React.FC<AgendaTableProps> = ({
                           {item.status}
                         </span>
                       </td>
-                      {/* ✅ Botão Detalhes removido */}
+                      {/* Botão Cancelar: Aparece apenas para o ADMIN */}
+                      {isAdmin && (
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <button 
+                            onClick={() => handleCancelar(item.id)}
+                            disabled={item.status === 'CANCELADO'}
+                            className={`${item.status === 'CANCELADO' ? 'text-gray-300 cursor-not-allowed' : 'text-red-600 hover:text-red-900'} font-semibold transition-colors`}
+                          >
+                            {item.status === 'CANCELADO' ? 'Cancelado' : 'Cancelar'}
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   ))
               ) : (
                 <tr>
-                  <td colSpan={3} className="px-6 py-12 text-center"> {/* ✅ 4 → 3 */}
+                  <td colSpan={isAdmin ? 5 : 4} className="px-6 py-12 text-center">
                     <div className="flex flex-col items-center justify-center text-gray-500">
                       <svg className="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>

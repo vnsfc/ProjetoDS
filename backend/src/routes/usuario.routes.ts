@@ -8,7 +8,7 @@ router.post('/cadastro', autenticar, UsuarioController.cadastrar)
 router.get('/me', autenticar, UsuarioController.me)
 router.put('/me', autenticar, UsuarioController.atualizarMe)
 
-router.get('/', autenticar, autorizar('ADMIN'), UsuarioController.listarTodos)
+router.get('/', autenticar, autorizar('ADMIN', 'NAPA'), UsuarioController.listarTodos)
 router.get('/:id', autenticar, autorizar('ADMIN'), UsuarioController.buscarPorId)
 
 router.put('/:id', autenticar, autorizar('ADMIN'), UsuarioController.atualizarPorId);

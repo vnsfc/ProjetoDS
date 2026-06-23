@@ -7,10 +7,27 @@ const PRIORIDADE_ORDEM: Record<string, number> = {
 }
 
 export const FilaEsperaService = {
-  listarOrdenada: async () => {
-    const fila = await FilaEsperaRepository.buscarFila()
+  listarOrdenada: async (dataFiltro?: string) => {
+    let inicioDia, fimDia;
+    
+    if (dataFiltro) {
+      const [ano, mes, dia] = dataFiltro.split('-').map(Number);
+      inicioDia = new Date(ano, mes - 1, dia, 0, 0, 0);
+      fimDia = new Date(ano, mes - 1, dia, 23, 59, 59, 999);
+    }
+
+    const fila = await FilaEsperaRepository.buscarFila(inicioDia, fimDia)
+    
     return fila.sort((a, b) => {
-      return (PRIORIDADE_ORDEM[a.prioridade] ?? 99) - (PRIORIDADE_ORDEM[b.prioridade] ?? 99)
+      const aChamado = a.status === 'CHAMADO' ? 1 : 0;
+      const bChamado = b.status === 'CHAMADO' ? 1 : 0;
+      if (aChamado !== bChamado) return aChamado - bChamado;
+
+      const pA = PRIORIDADE_ORDEM[a.prioridade] ?? 99;
+      const pB = PRIORIDADE_ORDEM[b.prioridade] ?? 99;
+      if (pA !== pB) return pA - pB;
+
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
     })
   },
   adicionar: async (dados: { pacienteNome: string; prioridade: string }) => {

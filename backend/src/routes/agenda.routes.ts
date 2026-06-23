@@ -12,6 +12,7 @@ router.post('/espera', AgendaController.criarEspera) //cadastra paciente na fila
 router.get('/espera', AgendaController.listarEspera) //lista a fila ordenada por prioridade (SCRUM-24)
 router.patch('/espera/:id', AgendaController.atualizarStatusEspera) //atualiza o status (SCRUM-24)
 router.patch('/espera/:id', autorizar('NAPA', 'ADMIN'), AgendaController.atualizarStatusEspera)
+router.patch('/:id/cancelar', autenticar, autorizar('ADMIN'), AgendaController.cancelarAgendamento);
 router.post('/', AgendaController.criarAgendamento) // efetiva o agendamento de um paciente (SCRUM-25)
 router.get('/', AgendaController.listarAgendamentos)
 
