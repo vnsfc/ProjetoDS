@@ -26,8 +26,8 @@ export const UsuarioController = {
 
   atualizarMe: async (req: Request, res: Response): Promise<void> => {
     try {
-      const { id } = (req as any).usuario
-      const usuario = await UsuarioService.atualizar(id, req.body)
+      const { id, perfil } = (req as any).usuario
+      const usuario = await UsuarioService.atualizar(id, req.body, perfil) 
       res.json(usuario)
     } catch (error: any) {
       res.status(400).json({ erro: error.message })
@@ -59,7 +59,8 @@ export const UsuarioController = {
     try {
       const idAlvo = Number(req.params.id);
       const dados = req.body;
-      const usuarioAtualizado = await UsuarioService.atualizar(idAlvo, dados);
+      const perfilSolicitante = (req as any).usuario.perfil;
+      const usuarioAtualizado = await UsuarioService.atualizar(idAlvo, dados, perfilSolicitante);
       res.json(usuarioAtualizado);
     } catch (error: any) {
       res.status(400).json({ erro: error.message });

@@ -39,6 +39,7 @@ export const UsuarioRepository = {
     const campos: Record<string, any> = {}
 
     if (d.nome           !== undefined) campos.nome           = d.nome
+    if (d.perfil         !== undefined) campos.perfil         = d.perfil
     if (d.telefone       !== undefined) campos.telefone       = d.telefone ?? null
     if (d.nacionalidade  !== undefined) campos.nacionalidade  = d.nacionalidade ?? null
     if (d.cpf            !== undefined) campos.cpf            = d.cpf ?? null

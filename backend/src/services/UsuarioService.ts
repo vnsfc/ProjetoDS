@@ -32,7 +32,7 @@ export const UsuarioService = {
     return UsuarioRepository.listarTodos(busca)
   },
 
-  atualizar: async (idAlvo: number, dados: Record<string, any>) => {
+  atualizar: async (idAlvo: number, dados: Record<string, any>, perfilSolicitante: string) => {
     const usuario = await UsuarioRepository.buscarPorId(idAlvo, true)
     if (!usuario) throw new Error('Usuario nao encontrado')
 
@@ -53,7 +53,9 @@ export const UsuarioService = {
 
     delete update.senhaAtual
     delete update.novaSenha
-    delete update.perfil
+    if (perfilSolicitante !== 'ADMIN') {
+      delete update.perfil
+    }
     delete update.email
 
     return UsuarioRepository.atualizar(idAlvo, update)

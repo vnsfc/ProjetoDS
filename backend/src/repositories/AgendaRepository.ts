@@ -2,8 +2,14 @@ import prisma from '../lib/prisma'
 //unico arquivo que fala direto com o banco, nenhuma logica de negocio aqui, so salvar e buscar dados
 export const AgendaRepository = {
 //cria um novo registro de agendamento no banco, recebe a data e define o status como 'AGENDADO' automaticamente
-  salvarAgendamento: async (data: { data: Date; status: string }) => {
-    return prisma.agenda.create({ data })
+  salvarAgendamento: async (data: { data: Date; pacienteNome: string; usuarioId: number }) => {
+    return prisma.agenda.create({ 
+      data: {
+        data: data.data,
+        pacienteNome: data.pacienteNome,
+        usuarioId: data.usuarioId
+      } 
+    })
   },
 //busca todos os agendamentos cadastrados no banco, retorna um array com todos os registros da tabela agenda
   listarAgendamentos: async () => {

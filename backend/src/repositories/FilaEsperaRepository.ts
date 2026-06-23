@@ -9,5 +9,11 @@ export const FilaEsperaRepository = {
   },
   remover: async (id: number) => {
     return prisma.filaEspera.delete({ where: { id } })
+  },
+  atualizarStatus: async (id: number, status: string) => {
+    return prisma.filaEspera.update({
+      where: { id },
+      data: { status }
+    })
   }
 }
