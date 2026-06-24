@@ -7,7 +7,7 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between flex-shrink-0">
-      <h1 className="text-lg font-semibold text-gray-800">ProjetoDS</h1>
+      <h1 className="text-lg font-semibold text-gray-800">Hospital Odontológico - UFPE</h1>
 
       <div className="flex items-center gap-4">
         {user && (
