@@ -27,12 +27,13 @@ export const ProntuarioController = {
   listar: async (req: Request, res: Response): Promise<void> => {
     try {
       const { id, perfil } = (req as any).usuario
+      const status = req.query.status as string | undefined
       if (perfil === 'ESTUDANTE') {
-        const prontuarios = await ProntuarioService.listarPorAluno(id)
+        const prontuarios = await ProntuarioService.listarPorAluno(id, status)
         res.json(prontuarios)
       } else {
         //PROFESSOR, ADMIN, NAPA (sem dados clínicos detalhados para NAPA,controle no frontend)
-        const prontuarios = await ProntuarioService.listarTodos()
+        const prontuarios = await ProntuarioService.listarTodos(status)
         res.json(prontuarios)
       }
     } catch (error: any) {

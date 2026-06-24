@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { fetchFilaEspera, PacienteFila } from '@/api/agenda.api'; // Ajustar caso o arquivo mude de lugar
+import { fetchFilaEspera, PacienteFila } from '@/api/agenda.api'; 
 
 export const useFilaEspera = () => {
   const { token } = useAuth();
+
+  // Pega a data de hoje no formato YYYY-MM-DD
+  const hoje = new Date().toISOString().split('T')[0];
+  const [dataSelecionada, setDataSelecionada] = useState<string>(hoje);
 
   const [fila, setFila] = useState<PacienteFila[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -14,7 +18,8 @@ export const useFilaEspera = () => {
     if (!token) return;
 
     try {
-      const data = await fetchFilaEspera(token);
+      // Passa a data selecionada para a API
+      const data = await fetchFilaEspera(token, dataSelecionada);
       setFila(data);
       setError(null);
     } catch (err: any) {
@@ -35,10 +40,9 @@ export const useFilaEspera = () => {
 
     carregarFila();
     
-    // Atualiza a lista de espera a cada 30 segundos
     const intervalId = setInterval(carregarFila, 30000); 
     return () => clearInterval(intervalId);
-  }, [token]);
+  }, [token, dataSelecionada]); // Atualiza sempre que a data ou o token mudar
 
-  return { fila, loading, error, ultimaAtualizacao };
+  return { fila, loading, error, ultimaAtualizacao, dataSelecionada, setDataSelecionada };
 };

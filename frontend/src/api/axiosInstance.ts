@@ -1,9 +1,16 @@
 import axios from 'axios';
 import { useAuthStore } from '../stores/AuthStores';
 
+// VITE_API_URL define o endereço do backend.
+// VITE_API_BASE_PATH define um prefixo de rota opcional (ex: "/ho" quando atrás do Nginx em produção/Docker).
+// Em desenvolvimento local, deixe VITE_API_BASE_PATH vazio ou não defina — assim as rotas batem direto em /auth, /usuarios, etc.
+const envUrl = import.meta.env.VITE_API_URL || '';
+const basePath = import.meta.env.VITE_API_BASE_PATH || '';
+const finalBaseURL = envUrl.replace(/\/$/, '') + basePath;
+
 const axiosInstance = axios.create({
   // Vazio usa o proxy do Vite; VITE_API_URL permite apontar para outro backend.
-  baseURL: import.meta.env.VITE_API_URL || '',
+  baseURL: finalBaseURL,
   headers: {
     'Content-Type': 'application/json',
   },

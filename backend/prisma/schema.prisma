@@ -9,6 +9,7 @@ datasource db {
 
 model Usuario {
   id        Int      @id @default(autoincrement())
+  agendas Agenda[] // para conexão com a agenda
   perfil    String   // ESTUDANTE | PROFESSOR | NAPA | ADMIN
   //dados comuns
   nome            String
@@ -68,13 +69,22 @@ model FilaEspera {
   id           Int      @id @default(autoincrement())
   pacienteNome String
   prioridade   String   // URGENTE | NORMAL | ELETIVO
+  
+  motivo       String?  
+  observacoes  String?
+  
+  status       String   @default("AGUARDANDO") // AGUARDANDO | CHAMADO
+  
   createdAt    DateTime @default(now())
 }
 
 model Agenda {
   id        Int      @id @default(autoincrement())
   data      DateTime
-  status    String   // DISPONIVEL | AGENDADO | CANCELADO
+  status    String @default("AGENDADO")  // DISPONIVEL | AGENDADO | CANCELADO
+  pacienteNome  String
+  usuario       Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId     Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

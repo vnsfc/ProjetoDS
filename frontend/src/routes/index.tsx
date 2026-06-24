@@ -3,6 +3,8 @@ import { PrivateRoute } from './privateRoute'
 // ── Pessoa 4 ──────────────────────────────────────────────────────────
 import { TriagemPage } from '@/pages/TriagemPage';
 import { AgendaPage } from '@/pages/AgendaPage';
+import { UsuariosPage }    from '@/pages/UsuariosPage'       
+
 // ── Pessoa 2 ──────────────────────────────────────────────────────────
 import { AppLayout } from '@/components/layout'
 import { DashboardPage } from '@/pages/DashboardPage'
@@ -12,21 +14,18 @@ import { ProntuarioDetailPage } from '@/pages/ProntuarioDetailPage'
 import { ProntuariosPage } from '@/pages/ProntuariosPage'
 
 // ── Pessoa 1 ──────────────────────────────────────────────────────────
-import { LoginForm } from '@/components/LoginForm'
-import { RegisterForm } from '@/components/RegisterForm'
 
-// ── Outras pessoas (descomentar quando prontos) ────────────────────────
-// import { TriagemPage }     from '@/pages/TriagemPage'        // Pessoa 4
-// import { AgendaPage }      from '@/pages/AgendaPage'         // Pessoa 5
-// import { UsuariosPage }    from '@/pages/UsuariosPage'       // Pessoa 5
+import { RegisterPage } from '@/pages/RegisterPage'
+import { PerfilPage } from '@/pages/PerfilPage'
+import { LoginPage } from '@/pages/Loginpage'
 
 export function AppRoutes() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/ho">
       <Routes>
         {/* Rotas públicas */}
-        <Route path="/login"    element={<LoginForm />} />
-        <Route path="/register" element={<RegisterForm />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login"    element={<LoginPage />} />
         <Route path="/"         element={<Navigate to="/dashboard" replace />} />
 
 
@@ -34,7 +33,7 @@ export function AppRoutes() {
         <Route element={<PrivateRoute />}>
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/perfil"    element={<div className="p-8">Perfil</div>} />
+            <Route path="/perfil"    element={<PerfilPage />} />
 
             <Route path="/prontuarios" element={<ProntuariosPage />} />
             <Route path="/prontuarios/:id" element={<ProntuarioDetailPage />} />
@@ -44,6 +43,7 @@ export function AppRoutes() {
 
             <Route path="/triagem"   element={<TriagemPage />} />
             <Route path="/agenda" element={<AgendaPage />} />
+            <Route path="/usuarios" element={<UsuariosPage />} />
 
           </Route>
         </Route>
@@ -52,4 +52,3 @@ export function AppRoutes() {
     </BrowserRouter>
   )
 }
-

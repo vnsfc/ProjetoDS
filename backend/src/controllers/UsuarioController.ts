@@ -5,7 +5,6 @@ import { DadosCadastro, Perfil } from '../types/types'
 export const UsuarioController = {
   cadastrar: async (req: Request, res: Response): Promise<void> => {
     try {
-      // Sem token = ESTUDANTE; com token de ADMIN = pode cadastrar qualquer perfil
       const perfilSolicitante: Perfil = (req as any).usuario?.perfil ?? 'ESTUDANTE'
       const dados = req.body as DadosCadastro
       const usuario = await UsuarioService.cadastrar(dados, perfilSolicitante)
@@ -15,7 +14,6 @@ export const UsuarioController = {
     }
   },
 
-  // Retorna dados do próprio usuário logado — inclui senha pois é o dono da conta
   me: async (req: Request, res: Response): Promise<void> => {
     try {
       const { id, perfil } = (req as any).usuario
@@ -26,9 +24,16 @@ export const UsuarioController = {
     }
   },
 
-  // Lista todos os usuários — só ADMIN
-  // Aceita ?busca=termo para filtrar por nome ou email
-  // Exemplo: GET /usuarios?busca=joao ou GET /usuarios?busca=@ufpe.br
+  atualizarMe: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { id, perfil } = (req as any).usuario
+      const usuario = await UsuarioService.atualizar(id, req.body, perfil) 
+      res.json(usuario)
+    } catch (error: any) {
+      res.status(400).json({ erro: error.message })
+    }
+  },
+
   listarTodos: async (req: Request, res: Response): Promise<void> => {
     try {
       const busca = req.query.busca as string | undefined
@@ -36,6 +41,39 @@ export const UsuarioController = {
       res.json(usuarios)
     } catch (error: any) {
       res.status(400).json({ erro: error.message })
+    }
+  },
+
+  buscarPorId: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { id, perfil } = (req as any).usuario
+      const idAlvo = Number(req.params.id)
+      const usuario = await UsuarioService.buscarPorId(idAlvo, id, perfil)
+      res.json(usuario)
+    } catch (error: any) {
+      res.status(404).json({ erro: error.message })
+    }
+  },
+
+  atualizarPorId: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const idAlvo = Number(req.params.id);
+      const dados = req.body;
+      const perfilSolicitante = (req as any).usuario.perfil;
+      const usuarioAtualizado = await UsuarioService.atualizar(idAlvo, dados, perfilSolicitante);
+      res.json(usuarioAtualizado);
+    } catch (error: any) {
+      res.status(400).json({ erro: error.message });
+    }
+  },
+
+  deletar: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const idAlvo = Number(req.params.id);
+      await UsuarioService.deletar(idAlvo);
+      res.status(204).send(); 
+    } catch (error: any) {
+      res.status(400).json({ erro: error.message });
     }
   }
 }

@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
+  base: '/ho/', 
+  
   plugins: [react()],
   resolve: {
     alias: {
@@ -27,7 +29,15 @@ export default defineConfig({
         target: 'http://localhost:3000',
         changeOrigin: true,
       },
+      '/fila': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
       '/ofertas': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+      '/dashboard': {
         target: 'http://localhost:3000',
         changeOrigin: true,
       },

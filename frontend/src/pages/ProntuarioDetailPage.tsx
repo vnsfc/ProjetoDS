@@ -90,7 +90,7 @@ export const ProntuarioDetailPage: React.FC = () => {
     return <Alert variant="warning">Prontuário não encontrado.</Alert>;
   }
 
-  const podeEditar = user?.perfil === 'ESTUDANTE' && !prontuario.assinado;
+  const podeEditar = user?.perfil === 'ESTUDANTE' && prontuario.status !== 'ASSINADO';
   const podeAssinar = user?.perfil === 'PROFESSOR';
 
   return (
@@ -125,7 +125,7 @@ export const ProntuarioDetailPage: React.FC = () => {
           <section className="rounded-lg border border-gray-200 bg-white p-6">
             <h2 className="font-semibold text-gray-900">Anamnese</h2>
             <p className="mt-3 whitespace-pre-wrap text-sm text-gray-600">
-              {prontuario.anamnese || 'Sem anamnese registrada.'}
+              {prontuario.evolucaoClinica || 'Sem anamnese registrada.'}
             </p>
           </section>
 

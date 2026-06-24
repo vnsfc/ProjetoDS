@@ -1,25 +1,39 @@
 import prisma from '../lib/prisma'
-//unico arquivo que fala direto com o banco
-// nenhuma logica de negocio aqui, so salvar e buscar dados
+//unico arquivo que fala direto com o banco, nenhuma logica de negocio aqui, so salvar e buscar dados
 export const AgendaRepository = {
-//cria um novo registro de agendamento no banco
-// recebe a data e define o status como 'AGENDADO' automaticamente
-  salvarAgendamento: async (data: { data: Date; status: string }) => {
-    return prisma.agenda.create({ data })
+//cria um novo registro de agendamento no banco, recebe a data e define o status como 'AGENDADO' automaticamente
+  salvarAgendamento: async (data: { data: Date; pacienteNome: string; usuarioId: number }) => {
+    return prisma.agenda.create({ 
+      data: {
+        data: data.data,
+        pacienteNome: data.pacienteNome,
+        usuarioId: data.usuarioId
+      } 
+    })
   },
-//busca todos os agendamentos cadastrados no banco
-//retorna um array com todos os registros da tabela agenda
-  listarAgendamentos: async () => {
-    return prisma.agenda.findMany()
+//busca todos os agendamentos cadastrados no banco, retorna um array com todos os registros da tabela agenda
+  listarAgendamentos: async (estudanteId?: number) => {
+    return prisma.agenda.findMany({
+      where: estudanteId ? { usuarioId: estudanteId } : undefined,
+      include: {
+        usuario: {
+          select: { nome: true }
+        }
+      }
+    })
   },
-//busca todas as ofertas de consulta disponiveis
-//ofertas sao criadas pelo coordenador e consumidas pelo NAP  
+//busca todas as ofertas de consulta disponiveis, ofertas sao criadas pelo coordenador e consumidas pelo NAP  
   listarOfertas: async () => {
     return prisma.oferta.findMany()
   },
-//cria uma nova oferta de consulta no banco
-//recebe a data e a quantidade de vagas disponiveis
+//cria uma nova oferta de consulta no banco, recebe a data e a quantidade de vagas disponiveis
   salvarOferta: async (data: { data: Date; vagas: number }) => {
     return prisma.oferta.create({ data })
-  }
+  },
+  atualizarStatus: async (id: number, status: string) => {
+    return prisma.agenda.update({
+      where: { id },
+      data: { status }
+    })
+  },
 }
