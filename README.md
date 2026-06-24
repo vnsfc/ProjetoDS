@@ -185,7 +185,7 @@ Depois de preencher o `.env`, continue:
 ```bash
 npx prisma migrate dev
 npx prisma generate
-npm run seed                
+npm run seed                # cria o primeiro usuário ADMIN
 npm run dev
 ```
 Backend disponível em `http://localhost:3000`.
@@ -274,20 +274,20 @@ No Docker, as variáveis também podem ser definidas via `docker-compose.yml` (j
 
 ### Frontend
 Crie um arquivo `.env` dentro de `frontend/`:
- 
+
 **Se for rodar localmente (sem Docker)** — o backend sobe na porta `3000`:
 ```env
 VITE_API_URL=http://localhost:3000
 ```
- 
-**Se for rodar com Docker** — o backend é acessado pela porta `3333` (mapeada do container):
+
+**Se for rodar com Docker** — deixe `VITE_API_URL` vazio. O Nginx do frontend já fica na mesma origem que o navegador acessa e redireciona `/ho/*` internamente para o container do backend, então não é necessário (e não funciona) apontar para `localhost:3333` diretamente:
 ```env
-VITE_API_URL=http://localhost:3333
+VITE_API_URL=
 VITE_API_BASE_PATH=/ho
 ```
- 
-Essa variável diz ao frontend onde está o backend. O `axiosInstance.ts` lê `VITE_API_URL` e monta a URL base das requisições. `VITE_API_BASE_PATH` é opcional e só deve ser usado quando o backend está atrás do Nginx (Docker/produção) — em desenvolvimento local, deixe essa variável vazia ou não a defina.
- 
+
+Essa variável diz ao frontend onde está o backend. O `axiosInstance.ts` lê `VITE_API_URL` e monta a URL base das requisições. Quando vazia, a requisição usa caminho relativo (ex: `/ho/auth/login`), que é o formato esperado pelo proxy reverso do Nginx em Docker. `VITE_API_BASE_PATH` é opcional e só deve ser usado quando o backend está atrás do Nginx (Docker/produção) — em desenvolvimento local, deixe essa variável vazia ou não a defina.
+
 ---
 
 ## Banco de Dados
