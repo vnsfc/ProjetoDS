@@ -3,7 +3,7 @@ import { UsuarioController } from '../controllers/UsuarioController'
 import { autenticar, autorizar } from '../middlewares/authRoles'
 
 const router = Router()
-router.post('/cadastro', autenticar, UsuarioController.cadastrar)
+router.post('/cadastro', UsuarioController.cadastrar)
 
 router.get('/me', autenticar, UsuarioController.me)
 router.put('/me', autenticar, UsuarioController.atualizarMe)

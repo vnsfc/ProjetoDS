@@ -7,11 +7,18 @@ export const RegisterForm: React.FC = () => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  
+
+  // Campos obrigatórios específicos do perfil ESTUDANTE (validados pelo backend)
+  const [tipoEstagio, setTipoEstagio] = useState('CURRICULAR');
+  const [nomeSupervisor, setNomeSupervisor] = useState('');
+  const [nomeCurso, setNomeCurso] = useState('');
+  const [periodoAtual, setPeriodoAtual] = useState('');
+  const [previsaoConclusao, setPrevisaoConclusao] = useState('');
+
   // Cadastro público é exclusivo para ESTUDANTE.
   // PROFESSOR, NAPA e ADMIN só podem ser criados por um ADMIN autenticado.
   const perfil: UserPerfil = 'ESTUDANTE';
-  
+
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
@@ -22,7 +29,17 @@ export const RegisterForm: React.FC = () => {
     setSuccess('');
 
     try {
-      await axiosInstance.post('/usuarios/cadastro', { nome, email, senha, perfil });
+      await axiosInstance.post('/usuarios/cadastro', {
+        nome,
+        email,
+        senha,
+        perfil,
+        tipoEstagio,
+        nomeSupervisor,
+        nomeCurso,
+        periodoAtual: Number(periodoAtual),
+        previsaoConclusao,
+      });
       setSuccess('Cadastro realizado com sucesso! Redirecionando para login...');
       setTimeout(() => navigate('/login'), 1500);
     } catch (err: any) {
@@ -34,7 +51,7 @@ export const RegisterForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 w-full text-left">
-      
+
       {/* Alertas de Erro e Sucesso padronizados com o tema */}
       {error && (
         <p className="text-red-400 text-sm bg-red-950/20 p-3 rounded-lg border border-red-500/30">
@@ -50,39 +67,105 @@ export const RegisterForm: React.FC = () => {
       {/* Campo Nome */}
       <div className="flex flex-col gap-2">
         <label className="text-sm text-[#94a3b8]">Nome completo</label>
-        <input 
-          type="text" 
-          required 
-          className="w-full px-4 py-3 bg-transparent border border-[#475569] rounded-lg text-[#f8fafc] text-base outline-none transition-all focus:border-[#38bdf8] focus:ring-4 focus:ring-[#38bdf8]/15" 
+        <input
+          type="text"
+          required
+          className="w-full px-4 py-3 bg-transparent border border-[#475569] rounded-lg text-[#f8fafc] text-base outline-none transition-all focus:border-[#38bdf8] focus:ring-4 focus:ring-[#38bdf8]/15"
           placeholder="Digite seu nome"
-          value={nome} 
-          onChange={(e) => setNome(e.target.value)} 
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
         />
       </div>
 
       {/* Campo E-mail */}
       <div className="flex flex-col gap-2">
         <label className="text-sm text-[#94a3b8]">E-mail</label>
-        <input 
-          type="email" 
-          required 
-          className="w-full px-4 py-3 bg-transparent border border-[#475569] rounded-lg text-[#f8fafc] text-base outline-none transition-all focus:border-[#38bdf8] focus:ring-4 focus:ring-[#38bdf8]/15" 
+        <input
+          type="email"
+          required
+          className="w-full px-4 py-3 bg-transparent border border-[#475569] rounded-lg text-[#f8fafc] text-base outline-none transition-all focus:border-[#38bdf8] focus:ring-4 focus:ring-[#38bdf8]/15"
           placeholder="Digite seu e-mail"
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
       </div>
 
       {/* Campo Senha */}
       <div className="flex flex-col gap-2">
         <label className="text-sm text-[#94a3b8]">Senha</label>
-        <input 
-          type="password" 
-          required 
-          className="w-full px-4 py-3 bg-transparent border border-[#475569] rounded-lg text-[#f8fafc] text-base outline-none transition-all focus:border-[#38bdf8] focus:ring-4 focus:ring-[#38bdf8]/15" 
+        <input
+          type="password"
+          required
+          className="w-full px-4 py-3 bg-transparent border border-[#475569] rounded-lg text-[#f8fafc] text-base outline-none transition-all focus:border-[#38bdf8] focus:ring-4 focus:ring-[#38bdf8]/15"
           placeholder="Crie uma senha"
-          value={senha} 
-          onChange={(e) => setSenha(e.target.value)} 
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+        />
+      </div>
+
+      {/* Campo Tipo de Estágio */}
+      <div className="flex flex-col gap-2">
+        <label className="text-sm text-[#94a3b8]">Tipo de estágio</label>
+        <select
+          required
+          className="w-full px-4 py-3 bg-transparent border border-[#475569] rounded-lg text-[#f8fafc] text-base outline-none transition-all focus:border-[#38bdf8] focus:ring-4 focus:ring-[#38bdf8]/15"
+          value={tipoEstagio}
+          onChange={(e) => setTipoEstagio(e.target.value)}
+        >
+          <option value="CURRICULAR" className="bg-[#0f172a]">Curricular</option>
+          <option value="EXTRACURRICULAR" className="bg-[#0f172a]">Extracurricular</option>
+        </select>
+      </div>
+
+      {/* Campo Nome do Curso */}
+      <div className="flex flex-col gap-2">
+        <label className="text-sm text-[#94a3b8]">Nome do curso</label>
+        <input
+          type="text"
+          required
+          className="w-full px-4 py-3 bg-transparent border border-[#475569] rounded-lg text-[#f8fafc] text-base outline-none transition-all focus:border-[#38bdf8] focus:ring-4 focus:ring-[#38bdf8]/15"
+          placeholder="Ex: Odontologia"
+          value={nomeCurso}
+          onChange={(e) => setNomeCurso(e.target.value)}
+        />
+      </div>
+
+      {/* Campo Nome do Supervisor */}
+      <div className="flex flex-col gap-2">
+        <label className="text-sm text-[#94a3b8]">Nome do supervisor</label>
+        <input
+          type="text"
+          required
+          className="w-full px-4 py-3 bg-transparent border border-[#475569] rounded-lg text-[#f8fafc] text-base outline-none transition-all focus:border-[#38bdf8] focus:ring-4 focus:ring-[#38bdf8]/15"
+          placeholder="Nome do professor responsável"
+          value={nomeSupervisor}
+          onChange={(e) => setNomeSupervisor(e.target.value)}
+        />
+      </div>
+
+      {/* Campo Período Atual */}
+      <div className="flex flex-col gap-2">
+        <label className="text-sm text-[#94a3b8]">Período atual</label>
+        <input
+          type="number"
+          required
+          min="1"
+          className="w-full px-4 py-3 bg-transparent border border-[#475569] rounded-lg text-[#f8fafc] text-base outline-none transition-all focus:border-[#38bdf8] focus:ring-4 focus:ring-[#38bdf8]/15"
+          placeholder="Ex: 6"
+          value={periodoAtual}
+          onChange={(e) => setPeriodoAtual(e.target.value)}
+        />
+      </div>
+
+      {/* Campo Previsão de Conclusão */}
+      <div className="flex flex-col gap-2">
+        <label className="text-sm text-[#94a3b8]">Previsão de conclusão</label>
+        <input
+          type="date"
+          required
+          className="w-full px-4 py-3 bg-transparent border border-[#475569] rounded-lg text-[#f8fafc] text-base outline-none transition-all focus:border-[#38bdf8] focus:ring-4 focus:ring-[#38bdf8]/15"
+          value={previsaoConclusao}
+          onChange={(e) => setPrevisaoConclusao(e.target.value)}
         />
       </div>
 
@@ -101,13 +184,13 @@ export const RegisterForm: React.FC = () => {
       </div>
 
       {/* Botão de Cadastro Estilo Outline */}
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         className="w-full py-3 mt-4 bg-transparent text-[#38bdf8] border border-[#38bdf8] rounded-lg text-base font-semibold cursor-pointer transition-all duration-200 hover:bg-[#38bdf8] hover:text-[#0f172a]"
       >
         Criar Conta
       </button>
-      
+
     </form>
   );
 };
