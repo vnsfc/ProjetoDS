@@ -1,8 +1,15 @@
 import prisma from '../lib/prisma'
 
 export const FilaEsperaRepository = {
-  buscarFila: async () => {
-    return prisma.filaEspera.findMany()
+  buscarFila: async (inicioDia?: Date, fimDia?: Date) => {
+    const where = inicioDia && fimDia ? {
+      createdAt: {
+        gte: inicioDia,
+        lte: fimDia
+      }
+    } : undefined;
+
+    return prisma.filaEspera.findMany({ where })
   },
   adicionar: async (data: { pacienteNome: string; prioridade: string }) => {
     return prisma.filaEspera.create({ data })

@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useAgenda } from '@/hooks/useAgenda';
+import { useAuth } from '@/hooks/useAuth'; // Importado hook de auth
 import { Calendario } from '@/components/agenda/Calendario';
 import { AgendaTable } from '@/components/agenda/TabelaAgenda';
 import { PageHeader } from '@/components/layout';
-import { ModalAgendamento } from '@/components/agenda/ModalAgendamento'; // Importação do novo Modal
+import { ModalAgendamento } from '@/components/agenda/ModalAgendamento'; 
 
 export const AgendaPage: React.FC = () => {
   const { todosAgendamentos, loading, error, ultimaAtualizacao, refetch } = useAgenda();
-  const [modalAberto, setModalAberto] = useState(false); // Estado para controlar o modal
+  const { user } = useAuth(); // Identifica quem é o usuário
+  const [modalAberto, setModalAberto] = useState(false); 
 
   const dataAtual = new Date();
   const formatarDataBr = (dia: number, mes: number, ano: number) => 
@@ -32,12 +34,15 @@ export const AgendaPage: React.FC = () => {
         descricao="Selecione um dia no calendário para ver os horários marcados."
         acao={
           <div className="flex items-center gap-4">
-            <button 
-              onClick={() => setModalAberto(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors"
-            >
-              Novo Agendamento
-            </button>
+            {/* O Botão agora só renderiza se o perfil for NAPA */}
+            {user?.perfil === 'NAPA' && (
+              <button 
+                onClick={() => setModalAberto(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors"
+              >
+                Novo Agendamento
+              </button>
+            )}
             <div className="text-sm text-gray-500 font-medium">
               {ultimaAtualizacao && `Última atualização: ${ultimaAtualizacao}`}
             </div>
@@ -60,16 +65,16 @@ export const AgendaPage: React.FC = () => {
             agendamentosDoDia={agendamentosDoDia} 
             dataSelecionada={dataSelecionada} 
             loading={loading} 
+            refetch={refetch} 
           />
         </div>
       )}
 
-      {/* Renderização condicional do Modal */}
       {modalAberto && (
         <ModalAgendamento 
           onClose={() => setModalAberto(false)} 
           onSave={() => {
-            refetch(); // Atualiza a lista após salvar
+            refetch(); 
             setModalAberto(false);
           }} 
         />

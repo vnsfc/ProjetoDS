@@ -70,6 +70,9 @@ model FilaEspera {
   pacienteNome String
   prioridade   String   // URGENTE | NORMAL | ELETIVO
   
+  motivo       String?  
+  observacoes  String?
+  
   status       String   @default("AGUARDANDO") // AGUARDANDO | CHAMADO
   
   createdAt    DateTime @default(now())
