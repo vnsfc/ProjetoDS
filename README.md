@@ -29,6 +29,9 @@
 
 ---
 
+## Apresentação
+[📊 Slides da Apresentação](https://github.com/vnsfc/ProjetoDS/blob/main/Apresenta%C3%A7%C3%A3o%20Cl%C3%ADnica%20Escola%20de%20Odontologia.pdf)
+
 ## Sobre o Projeto
 
 A Clínica Escola de Odontologia da UFPE atende pacientes por meio de atendimentos supervisionados realizados por estudantes sob orientação de professores. O sistema digitaliza e centraliza esse processo, substituindo fluxos manuais por uma plataforma web com controle de acesso por perfil.
