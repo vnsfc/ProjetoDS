@@ -24,6 +24,11 @@
 
 ---
 
+## Demonstração
+[▶ Ver demonstração no YouTube](https://youtu.be/fvCiMrjZXSQ)
+
+---
+
 ## Sobre o Projeto
 
 A Clínica Escola de Odontologia da UFPE atende pacientes por meio de atendimentos supervisionados realizados por estudantes sob orientação de professores. O sistema digitaliza e centraliza esse processo, substituindo fluxos manuais por uma plataforma web com controle de acesso por perfil.
@@ -164,7 +169,7 @@ Para rodar com Docker:
 
 ### 1. Clonar o repositório
 ```bash
-git clone <LINK_DO_REPOSITORIO_AQUI>
+git clone https://github.com/vnsfc/ProjetoDS.git
 cd ProjetoDS
 ```
 
